@@ -4,4 +4,7 @@ Lazy Note Taker is an Android note taking app that uses Tesseract OCR to extract
 
 ## Steps to install
 >Cry
+
 `cry again`
+
+Sheldon
