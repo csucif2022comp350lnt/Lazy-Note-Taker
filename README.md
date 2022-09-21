@@ -8,3 +8,5 @@ Lazy Note Taker is an Android note taking app that uses Tesseract OCR to extract
 `cry again`
 
 Sheldon
+
+Gabriel
