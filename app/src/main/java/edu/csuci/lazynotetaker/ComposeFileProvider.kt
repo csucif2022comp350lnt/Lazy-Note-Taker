@@ -28,6 +28,7 @@ class ComposeFileProvider : FileProvider(
 ) {
 
     companion object {
+        var imageFile: Uri? = null
         fun getImageUri(context: Context): Uri {
             val directory = File(context.cacheDir, "images")
             directory.mkdirs()
@@ -62,6 +63,7 @@ fun ImagePicker(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            ComposeFileProvider.imageFile = uri
         }
     )
 
@@ -108,7 +110,7 @@ fun ImagePicker(
                 },
             ) {
                 Text(
-                    text = "Take photo"
+                    text = OCR.text
                 )
             }
         }
