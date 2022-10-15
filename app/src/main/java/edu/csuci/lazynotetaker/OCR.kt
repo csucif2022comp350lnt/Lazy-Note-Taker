@@ -1,36 +1,38 @@
 package edu.csuci.lazynotetaker
 
+import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Environment
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.kittinunf.fuel.Fuel
+import androidx.core.content.ContextCompat.getSystemService
 import com.googlecode.tesseract.android.TessBaseAPI
 import java.io.File
 
-class OCR {
 
-    companion object {
+object OCR : Activity() {
+
         var text = ""
-    }
 
-    val capturedImageUri = ComposeFileProvider.imageFile
+    private val capturedImageUri = ComposeFileProvider.imageFile
     @Composable
     fun TesseractOCR(context: Context, language: String?) {
 // Create Tesseract instance
         // Create Tesseract instance
         val tess = TessBaseAPI()
+        val dataPath: String = File(Environment.DIRECTORY_DOWNLOADS, "tesseract").absolutePath
 
 // Given path must contain subdirectory `tessdata` where are `*.traineddata` language files
 
 // Given path must contain subdirectory `tessdata` where are `*.traineddata` language files
-        val dataPath = File(Environment.getExternalStorageDirectory(), "tesseract").absolutePath
 
 // Initialize API for specified language (can be called multiple times during Tesseract lifetime)
 
@@ -61,6 +63,19 @@ class OCR {
 
 }
 
+fun downloadFile(fileName : String, url : String){
+        val imageLink = Uri.parse(url)
+    //val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager?
+        var request = DownloadManager.Request(imageLink)
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE or DownloadManager.Request.NETWORK_WIFI)
+            .setAllowedOverRoaming(false)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setTitle(fileName)
+            .setDescription("Downloading$fileName")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, File.separator+fileName+".traineddata")
+    val downloadId: Long = downloadManager!!.enqueue(request)
+}
+
 @Composable
 fun ocrUI (
     modifier: Modifier = Modifier,
@@ -71,7 +86,7 @@ fun ocrUI (
     Button(
         modifier = Modifier.padding(top = 16.dp),
         onClick = {
-
+            downloadFile("eng.traineddata", "https://github.com/tesseract-ocr/tessdata/raw/4.0.0/eng.traineddata" )
         },
     ) {
         Text(

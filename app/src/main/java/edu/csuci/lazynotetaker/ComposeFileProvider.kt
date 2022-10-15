@@ -49,6 +49,7 @@ class ComposeFileProvider : FileProvider(
 
 @Composable
 fun ImagePicker(
+    Context: Context,
     modifier: Modifier = Modifier,
 ) {
     var hasImage by remember {
@@ -57,7 +58,9 @@ fun ImagePicker(
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-
+    if (hasImage){
+        OCR.TesseractOCR(context = Context, language = "English")
+    }
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
