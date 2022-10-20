@@ -3,6 +3,9 @@
     <files-path
         name="my_images"
         path="images/" />
+    <files-path
+        name="ocr_model"
+        path="tessdata/" />
     <cache-path
         name="my_images"
         path="images/" />
