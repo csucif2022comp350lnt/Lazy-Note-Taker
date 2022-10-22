@@ -58,8 +58,8 @@ fun ImagePicker(
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-    if (hasImage){
-        OCR.TesseractOCR(context = Context)
+    if (hasImage && imageUri != null){
+        OCR.TesseractOCR(context = Context, imageUri!!)
     }
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),

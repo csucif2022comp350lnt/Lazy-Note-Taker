@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
             LazyNoteTakerTheme {
                 // A surface container using the 'background' color from the theme
                 ImagePicker(this)
-                OcrUI(this)
+                OcrUI()
             }
         }
     }
