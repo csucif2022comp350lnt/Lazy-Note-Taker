@@ -1,5 +1,6 @@
 package edu.csuci.LazyNoteTaker.feature_note.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
+                    val context: Context = this
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
@@ -57,8 +59,10 @@ class MainActivity : ComponentActivity() {
                         )   {
                             val color = it.arguments?.getInt("noteColor") ?: -1
                             AddEditNoteScreen(
+                                context = context,
                                 navController = navController,
-                                noteColor = color
+                                noteColor = color,
+
                             )
                         }
                     }

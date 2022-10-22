@@ -1,5 +1,6 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import android.content.Context
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
@@ -27,9 +29,23 @@ import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.component
 import edu.csuci.lazynotetaker.components.CompleteDialogContent
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
+
+fun getFileFromAssets(context: Context, fileName: String): File = File(context.cacheDir, fileName)
+    .also {
+        if (!it.exists()) {
+            it.outputStream().use { cache ->
+                context.assets.open(fileName).use { inputStream ->
+                    inputStream.copyTo(cache)
+                }
+            }
+        }
+    }
+
 
 @Composable
 fun AddEditNoteScreen(
+    context: Context,
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
@@ -55,6 +71,7 @@ fun AddEditNoteScreen(
         Dialog(
             onDismissRequest = { dialogState.value = false },
             content = {
+                OCR.TesseractOCR(context, getFileFromAssets(context, "sampletext.jpg").toUri())
                 CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
             },
             properties = DialogProperties(
@@ -85,7 +102,8 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                          dialogState.value = true
+                //viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -174,14 +192,7 @@ fun AddEditNoteScreen(
 @Composable
 fun BodyContent() {
     Text(
-        text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
-                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
-                "when an unknown printer took a galley of type and scrambled it to make a type " +
-                "specimen book. It has survived not only five centuries, but also the leap into " +
-                "electronic typesetting, remaining essentially unchanged. It was popularised in " +
-                "the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and " +
-                "more recently with desktop publishing software like Aldus PageMaker including " +
-                "versions of Lorem Ipsum.",
+        text = OCR.text,
         fontSize = 22.sp
     )
 }
