@@ -3,6 +3,8 @@ package edu.csuci.LazyNoteTaker.feature_note.data.repository
 import edu.csuci.LazyNoteTaker.feature_note.data.data_source.NoteDao
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
 import edu.csuci.LazyNoteTaker.feature_note.domain.repository.NoteRepository
+import edu.csuci.lazynotetaker.feature_note.data.data_source.NotesWithPages
+import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImpl(
@@ -23,5 +25,13 @@ class NoteRepositoryImpl(
 
     override suspend fun deleteNote(note: Note) {
         dao.deleteNote(note)
+    }
+
+    override suspend fun insertPage(page: Page) {
+        dao.insertPage(page)
+    }
+
+    override suspend fun getNotesWithPages(id: Int): List<NotesWithPages> {
+        return dao.getNotesWithPages(id)
     }
 }
