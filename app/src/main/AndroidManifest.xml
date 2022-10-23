@@ -3,17 +3,36 @@
     package="edu.csuci.LazyNoteTaker">
 
     <application
+<<<<<<< HEAD
         android:name="edu.csuci.LazyNoteTaker.NoteApp"
+=======
+
+>>>>>>> 4d4e3ae03963b4c4fde1e1f94f17db89a7862816
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
         android:theme="@style/Theme.LazyNoteTaker">
+=======
+        android:theme="@style/Theme.LazyNoteTaker"
+        tools:targetApi="31">
+
+        <provider
+            android:name=".ComposeFileProvider"
+            android:authorities="edu.csuci.lazynotetaker.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+>>>>>>> 4d4e3ae03963b4c4fde1e1f94f17db89a7862816
         <activity
             android:name="edu.csuci.LazyNoteTaker.feature_note.presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.LazyNoteTaker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
