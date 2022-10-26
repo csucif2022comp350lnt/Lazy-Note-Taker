@@ -4,5 +4,5 @@
 
 Lazy Note Taker is an Android note taking app that uses Tesseract OCR to extract text contained in an image or from camera.
 
-testing again 
+testing again again 
 ## Steps to install
