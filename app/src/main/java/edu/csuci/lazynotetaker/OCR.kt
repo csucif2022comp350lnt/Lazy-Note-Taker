@@ -5,7 +5,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.util.Log
 import androidx.annotation.NonNull
@@ -16,6 +15,7 @@ import edu.csuci.lazynotetaker.OCR.getDownloadManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 
 
 object OCR : Activity() {
@@ -44,15 +44,20 @@ object OCR : Activity() {
         }
 
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
+        Log.i("Test imageUri", "imageUri: $imageUri")
+        //val imagefileUri: InputStream? = contentResolver.openInputStream(imageUri)
         val options = BitmapFactory.Options()
         options.inSampleSize =
             4 // 1 - means max size. 4 - means maxsize/4 size. Don't use value <4, because you need more memory in the heap to store your data.
-            val bitmap = BitmapFactory.decodeFile(imageUri.toString(), options)
+            val bitmap = BitmapFactory.decodeFile(MediaUtils.getRealPathFromURI(context, imageUri), options)
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
+        if (bitmap == null){
+            Log.w("","Bitmap missing")
+        } else if (bitmap != null) {
             tess.setImage(bitmap)
             text = tess.utF8Text
             println(text)
-            println("Test")
+        }
 // Release Tesseract when you don't want to use it anymore
 
 // Release Tesseract when you don't want to use it anymore
@@ -63,7 +68,7 @@ object OCR : Activity() {
 
 
 
-fun getTessDataPath(@NonNull context: Context): String {
+fun getTessDataPath(context: Context): String {
     return context.filesDir.absolutePath;
 }
 

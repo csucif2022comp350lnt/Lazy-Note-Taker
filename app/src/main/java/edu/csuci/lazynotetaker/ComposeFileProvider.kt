@@ -1,7 +1,12 @@
 package edu.csuci.lazynotetaker
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -20,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.core.net.toFile
 import coil.compose.AsyncImage
+import edu.csuci.lazynotetaker.OCR.startActivityForResult
 import java.io.File
 
 class ComposeFileProvider : FileProvider(
@@ -28,7 +35,6 @@ class ComposeFileProvider : FileProvider(
 ) {
 
     companion object {
-        var imageFile: Uri? = null
         fun getImageUri(context: Context): Uri {
             val directory = File(context.cacheDir, "images")
             directory.mkdirs()
@@ -47,6 +53,7 @@ class ComposeFileProvider : FileProvider(
     }
 }
 
+
 @Composable
 fun ImagePicker(
     Context: Context,
@@ -59,14 +66,14 @@ fun ImagePicker(
         mutableStateOf<Uri?>(null)
     }
     if (hasImage && imageUri != null){
-        OCR.TesseractOCR(context = Context, imageUri!!)
+        Log.i("Test imageUri", "" + imageUri)
+        OCR.TesseractOCR(Context, imageUri!!)
     }
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
-            ComposeFileProvider.imageFile = uri
         }
     )
 
@@ -82,12 +89,13 @@ fun ImagePicker(
         modifier = modifier,
     ) {
         if (hasImage && imageUri != null) {
-
             AsyncImage(
                 model = imageUri,
                 modifier = Modifier.fillMaxWidth(),
                 contentDescription = "Selected image",
             )
+            OCR.TesseractOCR(context, imageUri!!)
+            Log.i("Test imageUri", "" + imageUri.toString())
         }
         Column(
             modifier = Modifier
@@ -110,6 +118,7 @@ fun ImagePicker(
                     val uri = ComposeFileProvider.getImageUri(context)
                     imageUri = uri
                     cameraLauncher.launch(uri)
+                    File.createTempFile("selected_image_", ".jpg")
                 },
             ) {
                 Text(
