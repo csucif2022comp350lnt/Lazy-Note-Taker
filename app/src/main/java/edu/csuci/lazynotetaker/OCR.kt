@@ -3,14 +3,27 @@ package edu.csuci.lazynotetaker
 import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.res.AssetManager
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.NonNull
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import com.googlecode.tesseract.android.TessBaseAPI
+import edu.csuci.lazynotetaker.OCR.getCacheDir
 import edu.csuci.lazynotetaker.OCR.getDownloadManager
 import java.io.File
 import java.io.FileOutputStream
@@ -22,7 +35,6 @@ object OCR : Activity() {
         var text = "Open Camera"
     fun Context?.getDownloadManager() = this?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
 
-    @Composable
     fun TesseractOCR(context: Context, imageUri: Uri) {
 // Create Tesseract instance
         // Create Tesseract instance
@@ -45,14 +57,18 @@ object OCR : Activity() {
 
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
         Log.i("Test imageUri", "imageUri: $imageUri")
+        val uriPath = ObtainFile()
+            val realImageUri = uriPath.getPath(context, imageUri)
+
         //val imagefileUri: InputStream? = contentResolver.openInputStream(imageUri)
         val options = BitmapFactory.Options()
         options.inSampleSize =
             4 // 1 - means max size. 4 - means maxsize/4 size. Don't use value <4, because you need more memory in the heap to store your data.
-            val bitmap = BitmapFactory.decodeFile(MediaUtils.getRealPathFromURI(context, imageUri), options)
+            val bitmap = BitmapFactory.decodeFile(realImageUri.toString(), options)
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
         if (bitmap == null){
-            Log.w("","Bitmap missing")
+            Log.w("Bitmap failed","Bitmap missing")
+            Log.w("Data passed into bitmap", "" + realImageUri)
         } else if (bitmap != null) {
             tess.setImage(bitmap)
             text = tess.utF8Text
@@ -122,9 +138,23 @@ fun downloadFile(fileName : String, url : String, context: Context){
 }
 
 @Composable
-fun OcrUI (
+fun OcrUI ( context: Context
 ) {
-    Text(
-        text = OCR.text
-    )
+    val file: File = File(Environment.DIRECTORY_DCIM, )
+    Column(
+        modifier = Modifier
+            .padding(bottom = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Button(
+            modifier = Modifier.padding(top = 16.dp),
+            onClick = {
+                OCR.TesseractOCR(context = context, imageUri = file.toUri())
+            },
+        ) {
+            Text(
+                text = OCR.text
+            )
+        }
+    }
 }

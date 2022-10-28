@@ -35,6 +35,7 @@ class ComposeFileProvider : FileProvider(
 ) {
 
     companion object {
+        var imageFile: Uri? = null
         fun getImageUri(context: Context): Uri {
             val directory = File(context.cacheDir, "images")
             directory.mkdirs()
@@ -74,6 +75,7 @@ fun ImagePicker(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            ComposeFileProvider.imageFile = uri
         }
     )
 
@@ -118,7 +120,7 @@ fun ImagePicker(
                     val uri = ComposeFileProvider.getImageUri(context)
                     imageUri = uri
                     cameraLauncher.launch(uri)
-                    File.createTempFile("selected_image_", ".jpg")
+                    imageUri = uri
                 },
             ) {
                 Text(

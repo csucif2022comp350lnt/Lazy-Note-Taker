@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import edu.csuci.lazynotetaker.OCR.startActivityForResult
 import java.io.File
 import java.io.IOException
@@ -26,8 +27,8 @@ class CameraIntent: FileProvider() {
     }
 }
     @Composable
-    fun ComposeCameraIntent(Context: Context){
-        val context = LocalContext.current
+    fun ComposeCameraIntent(context: Context){
+
 
             Column(
                 modifier = Modifier
@@ -46,9 +47,12 @@ try {
         callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         startActivityForResult(callCameraIntent, 0)
     }
-}                   catch (e: IOException){
+}
+
+catch (e: IOException){
     print("Fail")
 }
+
                     }
                 ){
                     Text(
@@ -56,6 +60,10 @@ try {
                     )
                 }
             }
+        if (CameraIntent.imageFile != null)
+        {
+            OCR.TesseractOCR(context = context, imageUri = CameraIntent.imageFile!!.toUri())
+        }
     }
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         onActivityResult(requestCode, resultCode, data)

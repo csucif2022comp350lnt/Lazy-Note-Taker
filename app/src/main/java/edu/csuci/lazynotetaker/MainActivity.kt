@@ -11,8 +11,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             LazyNoteTakerTheme {
                 // A surface container using the 'background' color from the theme
-                ImagePicker(this)
-                //ComposeCameraIntent(this)
+                //ImagePicker(this)
+                ComposeCameraIntent(this)
                 OcrUI()
             }
         }
