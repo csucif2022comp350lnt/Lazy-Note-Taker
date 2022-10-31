@@ -10,6 +10,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.GetPageUseCase
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.GetPagesUseCase
 import javax.inject.Singleton
 
 @Module
@@ -39,7 +41,9 @@ object AppModule {
             getNotesUseCase = GetNotesUseCase(repository),
             deleteNoteUseCase = DeleteNoteUseCase(repository),
             addNoteUseCase = AddNoteUseCase(repository),
-            getNoteUseCase = GetNoteUseCase(repository)
+            getNoteUseCase = GetNoteUseCase(repository),
+            getPagesUseCase = GetPagesUseCase(repository),
+            getPageUseCase = GetPageUseCase(repository)
         )
     }
 }

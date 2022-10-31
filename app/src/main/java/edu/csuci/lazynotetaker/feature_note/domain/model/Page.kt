@@ -4,11 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Page (
-    @PrimaryKey(autoGenerate = false)
-    val id: Int? = null,
-    val title: String,
+data class Page(
     val content: String,
-    val pageNumber: Int
-
+    val pageNumber: Int,
+    @PrimaryKey val id: Int? = null
 )
+class InvalidNoteException(message: String): Exception(message)

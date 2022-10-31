@@ -1,5 +1,6 @@
 package edu.csuci.LazyNoteTaker.feature_note.data.data_source
 
+
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -17,8 +18,14 @@ interface NoteDao {
     @Query("SELECT * FROM note")
     fun getNotes(): Flow<List<Note>>
 
+    @Query("SELECT * FROM page")
+    fun getPages(): Flow<List<Page>>
+
     @Query("SELECT * FROM note WHERE id = :id")
     suspend fun getNoteById(id: Int) :Note?
+
+    @Query("SELECT * FROM page WHERE id = :id")
+    suspend fun getPageById(id: Int) :Page?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)

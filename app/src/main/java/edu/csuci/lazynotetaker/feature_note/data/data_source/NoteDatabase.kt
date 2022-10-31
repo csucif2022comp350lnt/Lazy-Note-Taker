@@ -17,8 +17,10 @@ abstract class NoteDatabase: RoomDatabase() {
     abstract val noteDao: NoteDao
 
     companion object {
-        @Volatile
+        const val DATABASE_NAME = "notes_db"
+        /*@Volatile
         private var INSTANCE: NoteDatabase? = null
+
 
         fun getInstance(context:Context): NoteDatabase {
             synchronized(this){
@@ -30,8 +32,8 @@ abstract class NoteDatabase: RoomDatabase() {
                     INSTANCE = it
                 }
             }
-            //const val DATABASE_NAME = "notes_db"
-        }
+
+        }*/
     }
 
 

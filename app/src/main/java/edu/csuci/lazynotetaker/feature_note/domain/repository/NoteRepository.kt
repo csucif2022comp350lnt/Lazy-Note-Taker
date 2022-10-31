@@ -9,7 +9,11 @@ interface NoteRepository {
 
     fun getNotes(): Flow<List<Note>>
 
+    fun getPages(): Flow<List<Page>>
+
     suspend fun getNoteById(id: Int): Note?
+
+    suspend fun getPageById(id: Int): Page?
 
     suspend fun insertNote(note: Note)
 

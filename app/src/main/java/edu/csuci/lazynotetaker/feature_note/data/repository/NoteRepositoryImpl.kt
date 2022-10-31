@@ -15,8 +15,16 @@ class NoteRepositoryImpl(
         return dao.getNotes()
     }
 
+    override fun getPages(): Flow<List<Page>> {
+        return dao.getPages()
+    }
+
     override suspend fun getNoteById(id: Int): Note? {
         return dao.getNoteById(id)
+    }
+
+    override suspend fun getPageById(id: Int): Page? {
+        return dao.getPageById(id)
     }
 
     override suspend fun insertNote(note: Note) {
