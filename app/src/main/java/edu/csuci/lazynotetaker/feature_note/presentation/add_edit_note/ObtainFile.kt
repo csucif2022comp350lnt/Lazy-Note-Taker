@@ -1,4 +1,4 @@
-package edu.csuci.lazynotetaker
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import android.content.ContentUris
 import android.content.Context

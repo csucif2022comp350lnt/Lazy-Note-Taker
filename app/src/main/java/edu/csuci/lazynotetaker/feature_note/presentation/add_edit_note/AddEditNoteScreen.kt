@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -10,19 +10,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
+import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.components.CompleteDialogContent
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,6 +39,9 @@ fun AddEditNoteScreen(
 
     val scaffoldState = rememberScaffoldState()
 
+    val dialogState: MutableState<Boolean> = remember {
+        mutableStateOf(false)
+    }
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -45,6 +50,19 @@ fun AddEditNoteScreen(
         )
     }
     val scope = rememberCoroutineScope()
+
+    if (dialogState.value) {
+        Dialog(
+            onDismissRequest = { dialogState.value = false },
+            content = {
+                CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -58,6 +76,7 @@ fun AddEditNoteScreen(
                 is AddEditNoteViewModel.UiEvent.SavedNote -> {
                     navController.navigateUp()
                 }
+
             }
         }
     }
@@ -74,12 +93,12 @@ fun AddEditNoteScreen(
             }
         },
         scaffoldState = scaffoldState
-    ) {
+    ) { padding->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
-                .padding(16.dp)
+                .padding(padding)
         )   {
             Row(
                 modifier = Modifier
@@ -150,5 +169,19 @@ fun AddEditNoteScreen(
 
     }
 
+}
 
+@Composable
+fun BodyContent() {
+    Text(
+        text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " +
+                "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " +
+                "when an unknown printer took a galley of type and scrambled it to make a type " +
+                "specimen book. It has survived not only five centuries, but also the leap into " +
+                "electronic typesetting, remaining essentially unchanged. It was popularised in " +
+                "the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and " +
+                "more recently with desktop publishing software like Aldus PageMaker including " +
+                "versions of Lorem Ipsum.",
+        fontSize = 22.sp
+    )
 }

@@ -1,4 +1,4 @@
-package edu.csuci.lazynotetaker
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import android.app.Activity
 import android.app.DownloadManager
@@ -23,19 +23,15 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.googlecode.tesseract.android.TessBaseAPI
-import edu.csuci.lazynotetaker.OCR.getCacheDir
-import edu.csuci.lazynotetaker.OCR.getDownloadManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-
 object OCR : Activity() {
         var text = "Open Camera"
-    fun Context?.getDownloadManager() = this?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
 
-    fun TesseractOCR(context: Context, imageUri: Uri) {
+    fun TesseractOCR(context: Context, imageUri: Uri): String {
 // Create Tesseract instance
         // Create Tesseract instance
         val tess = TessBaseAPI()
@@ -52,7 +48,7 @@ object OCR : Activity() {
             // Error initializing Tesseract (wrong data path or language)
             tess.recycle()
             print("Test")
-            return
+            return ""
         }
 
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
@@ -72,12 +68,13 @@ object OCR : Activity() {
         } else if (bitmap != null) {
             tess.setImage(bitmap)
             text = tess.utF8Text
-            println(text)
+            return text
         }
 // Release Tesseract when you don't want to use it anymore
 
 // Release Tesseract when you don't want to use it anymore
         tess.recycle()
+        return ""
     }
 
 }
@@ -134,27 +131,4 @@ fun downloadFile(fileName : String, url : String, context: Context){
         fileName
     )
 
-    val downloadId = context.getDownloadManager()!!.enqueue(request)
-}
-
-@Composable
-fun OcrUI ( context: Context
-) {
-    val file: File = File(Environment.DIRECTORY_DCIM, )
-    Column(
-        modifier = Modifier
-            .padding(bottom = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Button(
-            modifier = Modifier.padding(top = 16.dp),
-            onClick = {
-                OCR.TesseractOCR(context = context, imageUri = file.toUri())
-            },
-        ) {
-            Text(
-                text = OCR.text
-            )
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package edu.csuci.lazynotetaker
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import android.content.Context
 import android.content.Intent
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import coil.compose.AsyncImage
-import edu.csuci.lazynotetaker.OCR.startActivityForResult
 import java.io.File
 
 class ComposeFileProvider : FileProvider(

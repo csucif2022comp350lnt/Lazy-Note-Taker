@@ -3,4 +3,5 @@ package edu.csuci.LazyNoteTaker.feature_note.presentation.util
 sealed class Screen(val route: String) {
     object NotesStreen: Screen("notes_screen")
     object AddEditNoteScreen: Screen("add_edit_note_screen")
+    object OCRDialogScreen: Screen("ocr_dialog")
 }
