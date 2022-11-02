@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker
+package edu.csuci.lazynotetaker
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
