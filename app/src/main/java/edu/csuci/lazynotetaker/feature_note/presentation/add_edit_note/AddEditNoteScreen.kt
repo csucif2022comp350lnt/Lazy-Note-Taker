@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
+import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteViewModel
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -58,6 +60,7 @@ fun AddEditNoteScreen(
                 is AddEditNoteViewModel.UiEvent.SavedNote -> {
                     navController.navigateUp()
                 }
+                else -> {}
             }
         }
     }
@@ -74,12 +77,12 @@ fun AddEditNoteScreen(
             }
         },
         scaffoldState = scaffoldState
-    ) {
+    ) { padding->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
-                .padding(16.dp)
+                .padding(padding)
         )   {
             Row(
                 modifier = Modifier

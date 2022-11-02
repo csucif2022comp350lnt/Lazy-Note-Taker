@@ -115,6 +115,7 @@ class AddEditNoteViewModel @Inject constructor(
                     }
                 }
             }
+            else -> {}
         }
     }
 
