@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.csuci.lazynotetaker">
 
-
     <application
+
+        android:name="edu.csuci.lazynotetaker.NoteApp"
 
         android:allowBackup="true"
         android:name="edu.csuci.lazynotetaker.NoteApp"
