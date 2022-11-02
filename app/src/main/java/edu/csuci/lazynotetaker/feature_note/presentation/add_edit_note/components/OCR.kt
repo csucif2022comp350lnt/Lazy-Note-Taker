@@ -1,7 +1,6 @@
-package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components
 
 import android.app.Activity
-import android.app.DownloadManager
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context

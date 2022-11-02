@@ -27,6 +27,8 @@ import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
 import edu.csuci.lazynotetaker.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
@@ -71,7 +73,7 @@ fun AddEditNoteScreen(
         Dialog(
             onDismissRequest = { dialogState.value = false },
             content = {
-                OCR.TesseractOCR(context, getFileFromAssets(context, "sampletext.jpg").toUri())
+                TesseractOCR(context, getFileFromAssets(context, "sampletext.jpg").toUri())
                 CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
             },
             properties = DialogProperties(
@@ -102,6 +104,7 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    // getImage()
                           dialogState.value = true
                 //viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
