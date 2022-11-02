@@ -1,5 +1,6 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import android.content.Context
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -10,26 +11,44 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteViewModel
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
+
+fun getFileFromAssets(context: Context, fileName: String): File = File(context.cacheDir, fileName)
+    .also {
+        if (!it.exists()) {
+            it.outputStream().use { cache ->
+                context.assets.open(fileName).use { inputStream ->
+                    inputStream.copyTo(cache)
+                }
+            }
+        }
+    }
+
 
 @Composable
 fun AddEditNoteScreen(
+    context: Context,
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
@@ -39,6 +58,9 @@ fun AddEditNoteScreen(
 
     val scaffoldState = rememberScaffoldState()
 
+    val dialogState: MutableState<Boolean> = remember {
+        mutableStateOf(false)
+    }
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -47,6 +69,20 @@ fun AddEditNoteScreen(
         )
     }
     val scope = rememberCoroutineScope()
+
+    if (dialogState.value) {
+        Dialog(
+            onDismissRequest = { dialogState.value = false },
+            content = {
+                TesseractOCR(context, getFileFromAssets(context, "sampletext.jpg").toUri())
+                CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -69,7 +105,9 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    // getImage()
+                          dialogState.value = true
+                //viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -153,5 +191,12 @@ fun AddEditNoteScreen(
 
     }
 
+}
 
+@Composable
+fun BodyContent() {
+    Text(
+        text = OCR.text,
+        fontSize = 22.sp
+    )
 }
