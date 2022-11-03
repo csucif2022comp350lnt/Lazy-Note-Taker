@@ -10,7 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
-rootProject.name = "Lazy Note Taker"
+rootProject.name = "LazyNoteTaker"
 include ':app'
