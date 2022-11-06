@@ -1,8 +1,11 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,8 +26,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.getFileStreamPath
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class ComposeFileProvider : FileProvider() {
 
@@ -36,19 +42,21 @@ class ComposeFileProvider : FileProvider() {
     }
 
     fun getImageUri(context: Context): Uri {
-        val directory = File(context.cacheDir, "images")
+        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "images")
         directory.mkdirs()
-        val file = File.createTempFile(
-            "selected_image_",
-            ".jpg",
-            directory,
-        )
-        val authority = context.packageName + ".fileprovider"
-        return getUriForFile(
-            context,
-            authority,
-            file,
-        )
+        var file: File = File(directory, "temp")
+        if (file.exists()){
+            file.delete()
+        }
+        try {
+            file.createNewFile()
+            var out: FileOutputStream = FileOutputStream(file)
+            out.flush()
+            out.close()
+        } catch (e: IOException){
+
+        }
+        return Uri.fromFile(getFileStreamPath("temp"))
     }
 
 
