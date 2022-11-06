@@ -18,7 +18,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object OCR : Activity() {
-        var text = "Open Camera"
+        var text = "null"
 
     fun TesseractOCR(context: Context, imageUri: Uri): String {
 // Create Tesseract instance
@@ -118,7 +118,7 @@ private fun getUriRealPathAboveKitkat(ctx: Context?, uri: Uri?): String? {
             ret = if (isGooglePhotoDoc(uri.authority)) {
                 uri.lastPathSegment
             } else {
-                getImageRealPath(OCR.getContentResolver(), uri, null)
+                getImageRealPath(OCR.contentResolver, uri, null)
             }
         } else if (isFileUri(uri)) {
             ret = uri.path
@@ -150,7 +150,7 @@ private fun getUriRealPathAboveKitkat(ctx: Context?, uri: Uri?): String? {
 
                     // Get where clause with real document id.
                     val whereClause = MediaStore.Images.Media._ID + " = " + realDocId
-                    ret = getImageRealPath(OCR.getContentResolver(), mediaContentUri, whereClause)
+                    ret = getImageRealPath(OCR.contentResolver, mediaContentUri, whereClause)
                 }
             } else if (isDownloadDoc(uriAuthority)) {
                 // Build download URI.
@@ -159,7 +159,7 @@ private fun getUriRealPathAboveKitkat(ctx: Context?, uri: Uri?): String? {
                 // Append download document id at URI end.
                 val downloadUriAppendId =
                     ContentUris.withAppendedId(downloadUri, java.lang.Long.valueOf(documentId))
-                ret = getImageRealPath(OCR.getContentResolver(), downloadUriAppendId, null)
+                ret = getImageRealPath(OCR.contentResolver, downloadUriAppendId, null)
             } else if (isExternalStoreDoc(uriAuthority)) {
                 val idArr = documentId.split(":").toTypedArray()
                 if (idArr.size == 2) {
