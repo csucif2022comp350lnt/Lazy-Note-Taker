@@ -1,11 +1,11 @@
-package edu.csuci.LazyNoteTaker.di
+package edu.csuci.lazynotetaker.di
 
 import android.app.Application
 import androidx.room.Room
-import edu.csuci.LazyNoteTaker.feature_note.data.data_source.NoteDatabase
-import edu.csuci.LazyNoteTaker.feature_note.data.repository.NoteRepositoryImpl
-import edu.csuci.LazyNoteTaker.feature_note.domain.repository.NoteRepository
-import edu.csuci.LazyNoteTaker.feature_note.domain.use_case.*
+import edu.csuci.lazynotetaker.feature_note.data.data_source.NoteDatabase
+import edu.csuci.lazynotetaker.feature_note.data.repository.NoteRepositoryImpl
+import edu.csuci.lazynotetaker.feature_note.domain.repository.NoteRepository
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes
+package edu.csuci.lazynotetaker.feature_note.presentation.notes
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.components.NoteItem
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.components.OrderSection
-import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.components.NoteItem
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.components.OrderSection
+import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalAnimationApi::class)

@@ -1,7 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.domain.use_case
-
-import edu.csuci.lazynotetaker.feature_note.domain.use_case.GetPageUseCase
-import edu.csuci.lazynotetaker.feature_note.domain.use_case.GetPagesUseCase
+package edu.csuci.lazynotetaker.feature_note.domain.use_case
 
 data class NoteUseCases(
     val getNotesUseCase: GetNotesUseCase,

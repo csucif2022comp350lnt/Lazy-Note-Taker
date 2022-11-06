@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes.components
+package edu.csuci.lazynotetaker.feature_note.presentation.notes.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

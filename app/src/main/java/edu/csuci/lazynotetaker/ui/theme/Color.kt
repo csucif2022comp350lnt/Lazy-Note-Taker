@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.ui.theme
+package edu.csuci.lazynotetaker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

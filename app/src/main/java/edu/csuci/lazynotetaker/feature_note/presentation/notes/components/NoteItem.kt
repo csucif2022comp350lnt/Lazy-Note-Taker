@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes.components
+package edu.csuci.lazynotetaker.feature_note.presentation.notes.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 
 @Composable
 fun NoteItem(

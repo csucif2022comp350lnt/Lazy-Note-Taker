@@ -1,14 +1,14 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes
+package edu.csuci.lazynotetaker.feature_note.presentation.notes
 
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.use_case.NoteUseCases
-import edu.csuci.LazyNoteTaker.feature_note.domain.util.NoteOrder
-import edu.csuci.LazyNoteTaker.feature_note.domain.util.OrderType
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
+import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
+import edu.csuci.lazynotetaker.feature_note.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn

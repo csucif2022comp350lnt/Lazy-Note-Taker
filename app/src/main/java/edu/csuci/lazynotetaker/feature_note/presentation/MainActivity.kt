@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation
+package edu.csuci.lazynotetaker.feature_note.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,10 +10,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.NotesScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
-import edu.csuci.LazyNoteTaker.ui.theme.LazyNoteTakerTheme
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
+import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

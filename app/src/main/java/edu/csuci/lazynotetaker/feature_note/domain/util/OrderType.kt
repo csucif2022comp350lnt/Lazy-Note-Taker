@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.domain.util
+package edu.csuci.lazynotetaker.feature_note.domain.util
 
 sealed class OrderType {
     object Ascending: OrderType()

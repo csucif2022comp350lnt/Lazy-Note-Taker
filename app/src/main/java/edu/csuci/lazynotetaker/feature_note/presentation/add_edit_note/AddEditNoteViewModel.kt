@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,9 +6,9 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.InvalidNoteException
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.use_case.NoteUseCases
+import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

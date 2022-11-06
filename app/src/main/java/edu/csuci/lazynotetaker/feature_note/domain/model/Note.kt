@@ -1,8 +1,8 @@
-package edu.csuci.LazyNoteTaker.feature_note.domain.model
+package edu.csuci.lazynotetaker.feature_note.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import edu.csuci.LazyNoteTaker.ui.theme.*
+import edu.csuci.lazynotetaker.ui.theme.*
 
 
 @Entity
