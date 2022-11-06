@@ -90,6 +90,9 @@ fun AddEditNoteScreen(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
+
+            TesseractOCR(context, imageUri!!)
+            dialogState.value = true
         }
     )
 
@@ -143,8 +146,7 @@ fun AddEditNoteScreen(
                     val uri = getComposeFileProvider.getImageUri(context)
                     imageUri = uri
                     cameraLauncher.launch(uri)
-                    TesseractOCR(context, uri)
-                    dialogState.value = true
+
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
