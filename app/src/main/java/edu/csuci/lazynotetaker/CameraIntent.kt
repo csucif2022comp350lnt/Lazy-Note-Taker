@@ -15,8 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.OCR
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.OCR.startActivityForResult
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.startActivityForResult
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
