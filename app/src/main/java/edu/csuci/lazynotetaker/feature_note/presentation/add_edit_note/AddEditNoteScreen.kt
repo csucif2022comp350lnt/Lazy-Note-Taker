@@ -1,12 +1,10 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
-import android.Manifest.permission.CAMERA
-import android.Manifest.permission_group.CAMERA
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -17,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -27,29 +24,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.presentation.MainActivity.Companion.imageFile
-import edu.csuci.LazyNoteTaker.feature_note.presentation.MainActivity.Companion.imageUri
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
-import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
 import edu.csuci.lazynotetaker.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.*
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
-import kotlin.properties.Delegates
 
 class AddEditNoteScreen (){
     companion object{
         var isCameraorGal: Int = 0
     }
 }
+
+
 
 fun getFileFromAssets(context: Context, fileName: String): File = File(context.cacheDir, fileName)
     .also {
@@ -70,6 +63,13 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    val getComposeFileProvider = ComposeFileProvider()
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
 
@@ -78,6 +78,20 @@ fun AddEditNoteScreen(
     val dialogState: MutableState<Boolean> = remember {
         mutableStateOf(false)
     }
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+        }
+    )
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+        }
+    )
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -94,13 +108,8 @@ fun AddEditNoteScreen(
                 //var imageUri: Uri = "null".toUri()
                 //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                 //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-
-                //imageUri = cameraIntent(context)
-                if (imageFile != null) {
                     Log.e("ImageUri", "ImageUri2$imageUri")
-                    TesseractOCR(context, imageFile!!.toUri())
                     CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
-                }
             },
             properties = DialogProperties(
                 dismissOnBackPress = false,
@@ -130,8 +139,12 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                          dialogState.value = true
-                    AddEditNoteScreen.isCameraorGal = 1
+                    //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
+                    val uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+                    cameraLauncher.launch(uri)
+                    TesseractOCR(context, uri)
+                    dialogState.value = true
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {

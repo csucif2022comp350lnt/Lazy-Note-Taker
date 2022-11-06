@@ -77,7 +77,7 @@ dependencies {
     //noinspection GradleDependency
     implementation "androidx.compose.material:material-icons-extended:$material_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-
+    implementation 'pub.devrel:easypermissions:3.0.0'
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
