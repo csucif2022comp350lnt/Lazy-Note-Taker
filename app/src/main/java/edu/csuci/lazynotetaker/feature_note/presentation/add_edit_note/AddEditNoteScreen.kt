@@ -1,6 +1,9 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
-import android.content.Context
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -11,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,39 +24,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
-import edu.csuci.lazynotetaker.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.File
-
-fun getFileFromAssets(context: Context, fileName: String): File = File(context.cacheDir, fileName)
-    .also {
-        if (!it.exists()) {
-            it.outputStream().use { cache ->
-                context.assets.open(fileName).use { inputStream ->
-                    inputStream.copyTo(cache)
-                }
-            }
-        }
-    }
 
 
 @Composable
 fun AddEditNoteScreen(
-    context: Context,
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
 
@@ -65,6 +57,25 @@ fun AddEditNoteScreen(
     val dialogState: MutableState<Boolean> = remember {
         mutableStateOf(false)
     }
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+            dialogState.value = true
+        }
+    )
+
+    rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+
+            //val main = MainActivity()
+            //main.TesseractOCR(context, imageUri!!)
+            dialogState.value = true
+        }
+    )
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -78,8 +89,11 @@ fun AddEditNoteScreen(
         Dialog(
             onDismissRequest = { dialogState.value = false },
             content = {
-                TesseractOCR(context, getFileFromAssets(context, "sampletext.jpg").toUri())
-                CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
+                //var imageUri: Uri = "null".toUri()
+                //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                    Log.e("ImageUri", "ImageUri2$imageUri")
+                    CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
             },
             properties = DialogProperties(
                 dismissOnBackPress = false,
@@ -100,7 +114,6 @@ fun AddEditNoteScreen(
                 is AddEditNoteViewModel.UiEvent.SavedNote -> {
                     navController.navigateUp()
                 }
-                else -> {}
             }
         }
     }
@@ -110,14 +123,16 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // getImage()
-                          dialogState.value = true
-                            state.isColorSectionVisible = false;
-                //viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
+                    /*al uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri*/
+                    imagePicker.launch("image/*")
+                    state.isColorSectionVisible = false
+
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Get OCR Text")
+                Icon(imageVector = Icons.Default.Camera, contentDescription = "Get OCR Text")
             }
         },
         scaffoldState = scaffoldState
@@ -255,7 +270,7 @@ fun AddEditNoteScreen(
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                    state.isColorSectionVisible = false;
+                    state.isColorSectionVisible = false
                 },
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
@@ -274,7 +289,7 @@ fun AddEditNoteScreen(
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                    state.isColorSectionVisible = false;
+                    state.isColorSectionVisible = false
                 },
                 isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.body1,

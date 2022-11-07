@@ -17,15 +17,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules">
 
 
-        <provider
-            android:name="edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.ComposeFileProvider"
-            android:authorities="edu.csuci.lazynotetaker.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
+
 
         <activity
             android:name="edu.csuci.lazynotetaker.feature_note.presentation.MainActivity"
