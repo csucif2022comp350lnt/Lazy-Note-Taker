@@ -218,6 +218,7 @@ fun AddEditNoteScreen(
                     Icon(
                         Icons.Filled.Save,
                         contentDescription = "Save Note",
+                        tint = MaterialTheme.colors.onSurface,
                         modifier = Modifier.size(30.dp)
                     )
                 }
