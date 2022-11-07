@@ -13,10 +13,17 @@
         android:roundIcon="@drawable/lnticon"
         android:supportsRtl="true"
 
-        android:theme="@style/Theme.lazynotetaker"
-        android:dataExtractionRules="@xml/data_extraction_rules">
+        android:theme="@style/Theme.lazynotetaker">
 
-
+        <provider
+            android:name=".feature_note.presentation.add_edit_note.components.ComposeFileProvider"
+            android:authorities="edu.csuci.lazynotetaker.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
 
         <activity
