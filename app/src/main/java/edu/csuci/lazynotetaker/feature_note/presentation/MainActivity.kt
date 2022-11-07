@@ -1,9 +1,11 @@
 package edu.csuci.lazynotetaker.feature_note.presentation
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
@@ -27,16 +29,18 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         var text: String = "null"
-        var imageUri: Uri = "null".toUri()
+        var imageFile: Uri = "null".toUri()
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
-            if (data != null) {
-                imageUri = data.data!!
+            Log.i("datareturn", data.toString())
+            if (data.toString() != "Intent {  }") {
+                imageFile = data!!.data!!
             }
-            val imagefileUri: InputStream? = contentResolver.openInputStream(imageUri)
+            Log.i("uritofile", imageFile.toString())
+            val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
             TesseractOCR(this, imagefileUri)
 
         }
@@ -49,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
-
+                    val context: Context = this
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
@@ -82,9 +86,9 @@ class MainActivity : ComponentActivity() {
                         )   {
                             val color = it.arguments?.getInt("noteColor") ?: -1
                             AddEditNoteScreen(
+                                context = context,
                                 navController = navController,
                                 noteColor = color,
-
                             )
                         }
                     }

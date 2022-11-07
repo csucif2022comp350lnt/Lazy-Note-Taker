@@ -1,5 +1,6 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,9 +29,11 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.imageFile
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.ComposeFileProvider
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -38,10 +41,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddEditNoteScreen(
+    context: Context,
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    val getComposeFileProvider = ComposeFileProvider()
     var hasImage by remember {
         mutableStateOf(false)
     }
@@ -67,16 +72,16 @@ fun AddEditNoteScreen(
         }
     )
 
-    rememberLauncherForActivityResult(
+    val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
-
-            //val main = MainActivity()
-            //main.TesseractOCR(context, imageUri!!)
             dialogState.value = true
         }
     )
+
+
+
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -124,10 +129,21 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
-                    /*al uri = getComposeFileProvider.getImageUri(context)
-                    imageUri = uri*/
-                    imagePicker.launch("image/*")
+                    /*val directory = File(context.cacheDir, "images")
+                    directory.mkdirs()
+                    val file = File(directory,"${Calendar.getInstance().timeInMillis}.png")
+                    val uri = FileProvider.getUriForFile(
+                        context,
+                        context.packageName + ".fileprovider",
+                        file
+                    )*/
+
+                    val uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+                    imageFile = uri
+                    Log.i("Uri: ", imageFile.toString())
+                    cameraLauncher.launch(uri)
+                    ///imagePicker.launch("image/*")
                     state.isColorSectionVisible = false
 
                 },
