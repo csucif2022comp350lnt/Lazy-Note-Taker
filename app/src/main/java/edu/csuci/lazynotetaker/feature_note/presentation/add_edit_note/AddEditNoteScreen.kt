@@ -199,18 +199,7 @@ fun AddEditNoteScreen(
 
                         )
                     }
-                /*IconButton(
-                    onClick = {
-                        viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
-                    },
-                )   {
-                    Icon(
-                        imageVector = Icons.Outlined.Circle,
-                        contentDescription = "Color Picker",
-                        modifier = Modifier.size(30.dp)
 
-                    )
-                }*/
                 IconButton(
                     onClick = {
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
@@ -225,43 +214,6 @@ fun AddEditNoteScreen(
                 }
             }
 
-
-
-            /*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Note.noteColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .shadow(15.dp, CircleShape)
-                            .background(color)
-                            .border(
-                                width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
-                                    MaterialTheme.colors.primary
-                                } else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable {
-                                scope.launch {
-                                    noteBackgroundAnimatable.animateTo(
-                                        targetValue = Color(colorInt),
-                                        animationSpec = tween(
-                                            durationMillis = 500
-
-                                        )
-                                    )
-                                }
-                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-                            }
-                    )
-                }
-            }*/
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
