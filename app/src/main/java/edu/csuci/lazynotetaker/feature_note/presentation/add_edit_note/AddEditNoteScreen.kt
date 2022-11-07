@@ -11,6 +11,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -304,9 +305,12 @@ fun AddEditNoteScreen(
 
 @Composable
 fun BodyContent() {
-    Text(
-        text = OCR.text,
-        fontSize = 22.sp
-    )
+    SelectionContainer() {
+        Text(
+            text = OCR.text,
+            fontSize = 22.sp
+        )
+    }
+
 }
 
