@@ -21,5 +21,7 @@ interface NoteRepository {
 
     suspend fun deleteNote(note: Note)
 
+    suspend fun deletePage(page: Page)
+
     suspend fun getNotesWithPages(id: Int): List<NotesWithPages>
 }

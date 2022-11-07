@@ -40,7 +40,9 @@ object AppModule {
         return NoteUseCases(
             getNotesUseCase = GetNotesUseCase(repository),
             deleteNoteUseCase = DeleteNoteUseCase(repository),
+            deletePageUseCase = DeletePageUseCase(repository),
             addNoteUseCase = AddNoteUseCase(repository),
+            addPageUseCase = AddPageUseCase,
             getNoteUseCase = GetNoteUseCase(repository),
             getPagesUseCase = GetPagesUseCase(repository),
             getPageUseCase = GetPageUseCase(repository)

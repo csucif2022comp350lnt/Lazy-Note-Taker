@@ -9,4 +9,4 @@ data class Page(
     val pageNumber: Int,
     @PrimaryKey val id: Int? = null
 )
-//class InvalidNoteException(message: String): Exception(message)
+class InvalidPageException(message: String): Exception(message)

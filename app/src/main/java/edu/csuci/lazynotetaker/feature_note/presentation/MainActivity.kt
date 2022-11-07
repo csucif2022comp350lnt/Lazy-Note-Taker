@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation
+package edu.csuci.lazynotetaker.feature_note.presentation
 
 import android.content.Context
 import android.os.Bundle
@@ -12,8 +12,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.NotesScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
 import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,9 +30,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesStreen.route
+                        startDestination = Screen.NotesScreen.route
                     )   {
-                        composable(route = Screen.NotesStreen.route) {
+                        composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
                         }
                         composable(

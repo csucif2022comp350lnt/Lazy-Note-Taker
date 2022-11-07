@@ -2,7 +2,6 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,8 +10,7 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.NoteTextFieldState
+import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -33,6 +31,7 @@ class AddEditNoteViewModel @Inject constructor(
     )
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
+
     private val _noteContent = mutableStateOf(
         NoteTextFieldState(
         hint = "Enter some content..."
@@ -47,6 +46,7 @@ class AddEditNoteViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Int? = null
+    private val currentPageNumber = 1
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -59,7 +59,7 @@ class AddEditNoteViewModel @Inject constructor(
                             isHintVisible =  false
                         )
                         _noteContent.value = noteContent.value.copy(
-                            text = note.content,
+                            text = page.content,
                             isHintVisible =  false
                         )
                         _noteColor.value = note.color
@@ -103,9 +103,15 @@ class AddEditNoteViewModel @Inject constructor(
                         noteUseCases.addNoteUseCase(
                             Note(
                                 title = noteTitle.value.text,
-                                content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
+                                id = currentNoteId
+                            )
+                        )
+                        noteUseCases.addPageUseCase(
+                            Page(
+                                content = noteContent.value.text,
+                                pageNumber = currentPageNumber,
                                 id = currentNoteId
                             )
                         )

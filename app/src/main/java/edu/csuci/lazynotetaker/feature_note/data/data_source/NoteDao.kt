@@ -35,6 +35,9 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(note: Note)
 
+    @Delete
+    suspend fun deletePage(page: Page)
+
     @Transaction
     @Query("SELECT * FROM note WHERE id = :id")
     suspend fun getNotesWithPages(id: Int): List<NotesWithPages>

@@ -1,11 +1,7 @@
-package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components
 
 import android.content.Context
-import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,9 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.core.net.toFile
 import coil.compose.AsyncImage
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
 import java.io.File
 
 class ComposeFileProvider : FileProvider(
