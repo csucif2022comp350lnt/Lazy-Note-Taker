@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.ui.focus.FocusState
 
@@ -9,4 +9,6 @@ sealed class AddEditNoteEvent {
     data class ChangeContentFocus(val focusState: FocusState): AddEditNoteEvent()
     data class ChangeColor(val color: Int): AddEditNoteEvent()
     object SaveNote: AddEditNoteEvent()
+    object ToggleColorSection: AddEditNoteEvent()
+    object OpenOptionsMenu: AddEditNoteEvent()
 }

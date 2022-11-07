@@ -1,11 +1,13 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes.components
+package edu.csuci.lazynotetaker.feature_note.presentation.notes.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import edu.csuci.LazyNoteTaker.feature_note.domain.util.NoteOrder
-import edu.csuci.LazyNoteTaker.feature_note.domain.util.OrderType
+import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
+import edu.csuci.lazynotetaker.feature_note.domain.util.OrderType
 
 @Composable
 fun OrderSection(
@@ -17,10 +19,12 @@ fun OrderSection(
 ) {
     Column(
         modifier = modifier
+            .background(MaterialTheme.colors.onBackground)
 
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+
         )
         {
             DefaultRadioButton(
