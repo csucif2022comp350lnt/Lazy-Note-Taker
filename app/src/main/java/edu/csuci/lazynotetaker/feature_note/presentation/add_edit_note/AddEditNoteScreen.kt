@@ -132,7 +132,7 @@ fun AddEditNoteScreen(
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Get OCR Text")
+                Icon(imageVector = Icons.Default.Camera, contentDescription = "Get OCR Text")
             }
         },
         scaffoldState = scaffoldState
