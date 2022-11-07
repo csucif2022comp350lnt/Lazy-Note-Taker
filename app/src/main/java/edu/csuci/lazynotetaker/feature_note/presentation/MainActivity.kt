@@ -28,6 +28,7 @@ import java.io.InputStream
 class MainActivity : ComponentActivity() {
 
     companion object {
+        var isFileChooser : Boolean = false
         var text: String = "null"
         var imageFile: Uri = "null".toUri()
 
@@ -36,9 +37,9 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             Log.i("datareturn", data.toString())
-            /*if (data.toString() != "Intent {  }" || data.toString() != "" || data != null) {
+            if (isFileChooser) {
                 imageFile = data!!.data!!
-            }*/
+            }
             Log.i("uritofile", imageFile.toString())
             val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
             TesseractOCR(this, imagefileUri)

@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.imageFile
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.isFileChooser
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.ComposeFileProvider
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
@@ -68,6 +69,7 @@ fun AddEditNoteScreen(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            isFileChooser = true
             dialogState.value = true
         }
     )
@@ -76,6 +78,7 @@ fun AddEditNoteScreen(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
+            isFileChooser = false
             dialogState.value = true
         }
     )
