@@ -1,4 +1,4 @@
-package edu.csuci.lazynotetaker.components
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -73,15 +73,7 @@ import androidx.compose.ui.unit.sp
                 .padding(20.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .width(100.dp)
-                    .padding(end = 5.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Text(text = "Cancel", fontSize = 20.sp)
-            }
+
             Button(
                 onClick = {
                     dialogState.value = false
