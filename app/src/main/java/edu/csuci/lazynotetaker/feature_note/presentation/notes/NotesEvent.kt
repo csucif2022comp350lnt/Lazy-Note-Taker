@@ -1,8 +1,8 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.notes
+package edu.csuci.lazynotetaker.feature_note.presentation.notes
 
 
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.util.NoteOrder
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
 
 sealed class NotesEvent {
     data class Order(val noteOrder: NoteOrder): NotesEvent()

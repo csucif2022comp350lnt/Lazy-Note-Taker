@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.util
+package edu.csuci.lazynotetaker.feature_note.presentation.util
 
 sealed class Screen(val route: String) {
     object NotesStreen: Screen("notes_screen")

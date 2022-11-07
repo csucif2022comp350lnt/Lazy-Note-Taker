@@ -1,4 +1,4 @@
-package edu.csuci.LazyNoteTaker
+package edu.csuci.lazynotetaker
 
 import org.junit.Test
 

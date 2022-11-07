@@ -7,12 +7,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.InvalidNoteException
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.use_case.NoteUseCases
+import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.NoteTextFieldState
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.NoteTextFieldState
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -25,6 +26,9 @@ class AddEditNoteViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 
 ) : ViewModel() {
+
+    private val _state = mutableStateOf(AddEditNoteState())
+    val state: State<AddEditNoteState> = _state
 
     private val _noteTitle = mutableStateOf(
         NoteTextFieldState(
@@ -121,6 +125,11 @@ class AddEditNoteViewModel @Inject constructor(
 
                     }
                 }
+            }
+            is AddEditNoteEvent.ToggleColorSection -> {
+                _state.value = state.value.copy(
+                    isColorSectionVisible = true
+                )
             }
             else -> {}
         }
