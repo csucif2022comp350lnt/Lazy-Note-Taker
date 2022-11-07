@@ -36,9 +36,9 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             Log.i("datareturn", data.toString())
-            if (data.toString() != "Intent {  }") {
+            /*if (data.toString() != "Intent {  }" || data.toString() != "" || data != null) {
                 imageFile = data!!.data!!
-            }
+            }*/
             Log.i("uritofile", imageFile.toString())
             val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
             TesseractOCR(this, imagefileUri)
