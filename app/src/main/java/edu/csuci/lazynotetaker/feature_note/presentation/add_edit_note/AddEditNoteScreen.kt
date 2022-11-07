@@ -1,5 +1,6 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -11,6 +12,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -27,9 +29,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.imageFile
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.isFileChooser
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.ComposeFileProvider
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,10 +42,12 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AddEditNoteScreen(
+    context: Context,
     navController: NavController,
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    val getComposeFileProvider = ComposeFileProvider()
     var hasImage by remember {
         mutableStateOf(false)
     }
@@ -62,20 +69,22 @@ fun AddEditNoteScreen(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            isFileChooser = true
             dialogState.value = true
         }
     )
 
-    rememberLauncherForActivityResult(
+    val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
-
-            //val main = MainActivity()
-            //main.TesseractOCR(context, imageUri!!)
+            isFileChooser = false
             dialogState.value = true
         }
     )
+
+
+
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -123,10 +132,21 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
-                    /*al uri = getComposeFileProvider.getImageUri(context)
-                    imageUri = uri*/
-                    imagePicker.launch("image/*")
+                    /*val directory = File(context.cacheDir, "images")
+                    directory.mkdirs()
+                    val file = File(directory,"${Calendar.getInstance().timeInMillis}.png")
+                    val uri = FileProvider.getUriForFile(
+                        context,
+                        context.packageName + ".fileprovider",
+                        file
+                    )*/
+
+                    val uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+                    imageFile = uri
+                    Log.i("Uri: ", imageFile.toString())
+                    cameraLauncher.launch(uri)
+                    ///imagePicker.launch("image/*")
                     state.isColorSectionVisible = false
 
                 },
@@ -198,18 +218,7 @@ fun AddEditNoteScreen(
 
                         )
                     }
-                /*IconButton(
-                    onClick = {
-                        viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
-                    },
-                )   {
-                    Icon(
-                        imageVector = Icons.Outlined.Circle,
-                        contentDescription = "Color Picker",
-                        modifier = Modifier.size(30.dp)
 
-                    )
-                }*/
                 IconButton(
                     onClick = {
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
@@ -224,43 +233,6 @@ fun AddEditNoteScreen(
                 }
             }
 
-
-
-            /*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Note.noteColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .shadow(15.dp, CircleShape)
-                            .background(color)
-                            .border(
-                                width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
-                                    MaterialTheme.colors.primary
-                                } else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable {
-                                scope.launch {
-                                    noteBackgroundAnimatable.animateTo(
-                                        targetValue = Color(colorInt),
-                                        animationSpec = tween(
-                                            durationMillis = 500
-
-                                        )
-                                    )
-                                }
-                                viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
-                            }
-                    )
-                }
-            }*/
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
@@ -304,9 +276,12 @@ fun AddEditNoteScreen(
 
 @Composable
 fun BodyContent() {
-    Text(
-        text = OCR.text,
-        fontSize = 22.sp
-    )
+    SelectionContainer() {
+        Text(
+            text = OCR.text,
+            fontSize = 22.sp
+        )
+    }
+
 }
 
