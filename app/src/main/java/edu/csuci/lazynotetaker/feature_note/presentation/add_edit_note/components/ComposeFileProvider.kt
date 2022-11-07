@@ -1,12 +1,8 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
-import android.view.View
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -26,105 +22,107 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.getFileStreamPath
-import pub.devrel.easypermissions.EasyPermissions
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
-class ComposeFileProvider : FileProvider() {
+class ComposeFileProvider : FileProvider(
 
-    private fun requestPermissions() {
-        if (CameraUtility.hasCameraPermissions(requireContext())) {
-            return
+) {
+
+    companion object {
+        var imageFile: Uri? = null
+        fun getImageUri(context: Context): Uri {
+            val directory = File(context.cacheDir, "images")
+            directory.mkdirs()
+            val file = File.createTempFile(
+                "selected_image_",
+                ".jpg",
+                directory,
+            )
+            val authority = context.packageName + ".fileprovider"
+            return getUriForFile(
+                context,
+                authority,
+                file,
+            )
         }
-
     }
+}
 
-    fun getImageUri(context: Context): Uri {
-        val directory = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "images")
-        directory.mkdirs()
-        var file: File = File(directory, "temp")
-        if (file.exists()){
-            file.delete()
-        }
-        try {
-            file.createNewFile()
-            var out: FileOutputStream = FileOutputStream(file)
-            out.flush()
-            out.close()
-        } catch (e: IOException){
 
-        }
-        return Uri.fromFile(getFileStreamPath("temp"))
+@Composable
+fun ImagePicker(
+    Context: Context,
+    modifier: Modifier = Modifier,
+) {
+    var hasImage by remember {
+        mutableStateOf(false)
     }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    if (hasImage && imageUri != null){
+        Log.i("Test imageUri", "" + imageUri)
+        val main = MainActivity()
+        //main.TesseractOCR(Context, imageUri!!)
+    }
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+            ComposeFileProvider.imageFile = uri
+        }
+    )
 
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+        }
+    )
 
-    @Composable
-    fun ImagePicker(
-        modifier: Modifier = Modifier,
+    val context = LocalContext.current
+    Box(
+        modifier = modifier,
     ) {
-        var hasImage by remember {
-            mutableStateOf(false)
+        if (hasImage && imageUri != null) {
+            AsyncImage(
+                model = imageUri,
+                modifier = Modifier.fillMaxWidth(),
+                contentDescription = "Selected image",
+            )
+            val main = MainActivity()
+            //main.TesseractOCR(context, imageUri!!)
+            Log.i("Test imageUri", "" + imageUri.toString())
         }
-        var imageUri by remember {
-            mutableStateOf<Uri?>(null)
-        }
-
-        val imagePicker = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.GetContent(),
-            onResult = { uri ->
-                hasImage = uri != null
-                imageUri = uri
-            }
-        )
-
-        val cameraLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.TakePicture(),
-            onResult = { success ->
-                hasImage = success
-            }
-        )
-
-        val context = LocalContext.current
-        Box(
-            modifier = modifier,
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (hasImage && imageUri != null) {
-
-                AsyncImage(
-                    model = imageUri,
-                    modifier = Modifier.fillMaxWidth(),
-                    contentDescription = "Selected image",
+            Button(
+                onClick = {
+                    imagePicker.launch("image/*")
+                },
+            ) {
+                Text(
+                    text = "Select Image"
                 )
             }
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Button(
+                modifier = Modifier.padding(top = 16.dp),
+                onClick = {
+                    val uri = ComposeFileProvider.getImageUri(context)
+                    imageUri = uri
+                    cameraLauncher.launch(uri)
+                    imageUri = uri
+                },
             ) {
-                Button(
-                    onClick = {
-                        imagePicker.launch("image/*")
-                    },
-                ) {
-                    Text(
-                        text = "Select Image"
-                    )
-                }
-                Button(
-                    modifier = Modifier.padding(top = 16.dp),
-                    onClick = {
-                        val uri = getImageUri(context)
-                        imageUri = uri
-                        cameraLauncher.launch(uri)
-                    },
-                ) {
-                    Text(
-                        text = "Take photo"
-                    )
-                }
+                Text(
+                    text = MainActivity.text
+                )
             }
         }
     }

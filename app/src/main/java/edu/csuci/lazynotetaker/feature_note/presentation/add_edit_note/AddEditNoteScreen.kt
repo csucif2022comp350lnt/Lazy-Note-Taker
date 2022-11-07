@@ -31,7 +31,6 @@ import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.component
 import edu.csuci.lazynotetaker.components.CompleteDialogContent
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.*
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.File
@@ -83,6 +82,7 @@ fun AddEditNoteScreen(
         onResult = { uri ->
             hasImage = uri != null
             imageUri = uri
+            dialogState.value = true
         }
     )
 
@@ -91,7 +91,8 @@ fun AddEditNoteScreen(
         onResult = { success ->
             hasImage = success
 
-            TesseractOCR(context, imageUri!!)
+            val main = MainActivity()
+            //main.TesseractOCR(context, imageUri!!)
             dialogState.value = true
         }
     )
@@ -143,9 +144,9 @@ fun AddEditNoteScreen(
             FloatingActionButton(
                 onClick = {
                     //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
-                    val uri = getComposeFileProvider.getImageUri(context)
-                    imageUri = uri
-                    cameraLauncher.launch(uri)
+                    /*al uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri*/
+                    imagePicker.launch("image/*")
 
                 },
                 backgroundColor = MaterialTheme.colors.primary
@@ -235,7 +236,8 @@ fun AddEditNoteScreen(
 @Composable
 fun BodyContent() {
     Text(
-        text = OCR.text,
+
+        text = MainActivity.text,
         fontSize = 22.sp
     )
 }
