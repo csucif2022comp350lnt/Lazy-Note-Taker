@@ -1,8 +1,8 @@
-package edu.csuci.LazyNoteTaker.feature_note.domain.use_case
+package edu.csuci.lazynotetaker.feature_note.domain.use_case
 
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.InvalidNoteException
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.repository.NoteRepository
+import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.repository.NoteRepository
 
 class AddNoteUseCase(
     private val repository: NoteRepository

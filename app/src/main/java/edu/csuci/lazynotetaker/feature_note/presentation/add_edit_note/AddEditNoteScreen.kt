@@ -1,5 +1,9 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -9,24 +13,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteViewModel
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
+import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun AddEditNoteScreen(
@@ -34,11 +41,41 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+    var hasImage by remember {
+        mutableStateOf(false)
+    }
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
 
+    val state = viewModel.state.value
+
     val scaffoldState = rememberScaffoldState()
 
+    val dialogState: MutableState<Boolean> = remember {
+        mutableStateOf(false)
+    }
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+            dialogState.value = true
+        }
+    )
+
+    rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            hasImage = success
+
+            //val main = MainActivity()
+            //main.TesseractOCR(context, imageUri!!)
+            dialogState.value = true
+        }
+    )
 
     val noteBackgroundAnimatable = remember {
         Animatable(
@@ -47,6 +84,23 @@ fun AddEditNoteScreen(
         )
     }
     val scope = rememberCoroutineScope()
+
+    if (dialogState.value) {
+        Dialog(
+            onDismissRequest = { dialogState.value = false },
+            content = {
+                //var imageUri: Uri = "null".toUri()
+                //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                    Log.e("ImageUri", "ImageUri2$imageUri")
+                    CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            )
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -60,20 +114,25 @@ fun AddEditNoteScreen(
                 is AddEditNoteViewModel.UiEvent.SavedNote -> {
                     navController.navigateUp()
                 }
-                else -> {}
             }
         }
     }
 
     Scaffold(
+
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    //MainActivity.requestCamera.launch(android.Manifest.permission.CAMERA)
+                    /*al uri = getComposeFileProvider.getImageUri(context)
+                    imageUri = uri*/
+                    imagePicker.launch("image/*")
+                    state.isColorSectionVisible = false
+
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                Icon(imageVector = Icons.Default.Camera, contentDescription = "Get OCR Text")
             }
         },
         scaffoldState = scaffoldState
@@ -81,10 +140,93 @@ fun AddEditNoteScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(noteBackgroundAnimatable.value)
-                .padding(padding)
+                .background(MaterialTheme.colors.background)
+                .padding(0.dp)
         )   {
             Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(noteBackgroundAnimatable.value)
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                    if (state.isColorSectionVisible) {
+                        Note.noteColors.forEach { color ->
+                            val colorInt = color.toArgb()
+                            Box(
+                                modifier = Modifier
+                                    .size(30.dp)
+                                    .shadow(15.dp, CircleShape)
+                                    .background(color)
+                                    .border(
+                                        width = 3.dp,
+                                        color = if (viewModel.noteColor.value == colorInt) {
+                                            Black
+                                        } else Color.Transparent,
+                                        shape = CircleShape
+                                    )
+                                    .clickable {
+                                        scope.launch {
+                                            noteBackgroundAnimatable.animateTo(
+                                                targetValue = Color(colorInt),
+                                                animationSpec = tween(
+                                                    durationMillis = 500
+
+                                                )
+                                            )
+                                        }
+                                        viewModel.onEvent(AddEditNoteEvent.ChangeColor(colorInt))
+                                    }
+                            )
+                        }
+                    }
+                    else {
+                        Box(
+                            modifier = Modifier
+                                .size(30.dp)
+                                .shadow(15.dp, CircleShape)
+                                .background(noteBackgroundAnimatable.value)
+                                .border(
+                                    width = 3.dp,
+                                    color = MaterialTheme.colors.onBackground,
+                                    shape = CircleShape
+                                )
+                                .clickable {
+                                    viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
+                                }
+
+                        )
+                    }
+                /*IconButton(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.ToggleColorSection)
+                    },
+                )   {
+                    Icon(
+                        imageVector = Icons.Outlined.Circle,
+                        contentDescription = "Color Picker",
+                        modifier = Modifier.size(30.dp)
+
+                    )
+                }*/
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    }
+                )  {
+                    Icon(
+                        Icons.Filled.Save,
+                        contentDescription = "Save Note",
+                        tint = MaterialTheme.colors.onSurface,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+            }
+
+
+
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
@@ -100,7 +242,7 @@ fun AddEditNoteScreen(
                             .border(
                                 width = 3.dp,
                                 color = if (viewModel.noteColor.value == colorInt) {
-                                    Color.Black
+                                    MaterialTheme.colors.primary
                                 } else Color.Transparent,
                                 shape = CircleShape
                             )
@@ -118,7 +260,7 @@ fun AddEditNoteScreen(
                             }
                     )
                 }
-            }
+            }*/
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
@@ -128,12 +270,16 @@ fun AddEditNoteScreen(
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                    state.isColorSectionVisible = false
                 },
                 isHintVisible = titleState.isHintVisible,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.h5
 
+
+
             )
+
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = contentState.text,
@@ -143,6 +289,7 @@ fun AddEditNoteScreen(
                 },
                 onFocusChange = {
                     viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                    state.isColorSectionVisible = false
                 },
                 isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.body1,
@@ -153,5 +300,13 @@ fun AddEditNoteScreen(
 
     }
 
-
 }
+
+@Composable
+fun BodyContent() {
+    Text(
+        text = OCR.text,
+        fontSize = 22.sp
+    )
+}
+

@@ -1,15 +1,19 @@
-package edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note
+package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.InvalidNoteException
-import edu.csuci.LazyNoteTaker.feature_note.domain.model.Note
-import edu.csuci.LazyNoteTaker.feature_note.domain.use_case.NoteUseCases
+import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.NoteTextFieldState
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -23,14 +27,21 @@ class AddEditNoteViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    private val _noteTitle = mutableStateOf(NoteTextFieldState(
+    private val _state = mutableStateOf(AddEditNoteState())
+    val state: State<AddEditNoteState> = _state
+
+    private val _noteTitle = mutableStateOf(
+        NoteTextFieldState(
         hint = "Enter title..."
-    ))
+    )
+    )
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
-    private val _noteContent = mutableStateOf(NoteTextFieldState(
+    private val _noteContent = mutableStateOf(
+        NoteTextFieldState(
         hint = "Enter some content..."
-    ))
+    )
+    )
     val noteContent: State<NoteTextFieldState> = _noteContent
 
     private val _noteColor = mutableStateOf<Int> (Note.noteColors.random().toArgb())
@@ -115,13 +126,18 @@ class AddEditNoteViewModel @Inject constructor(
                     }
                 }
             }
+            is AddEditNoteEvent.ToggleColorSection -> {
+                _state.value = state.value.copy(
+                    isColorSectionVisible = true
+                )
+            }
             else -> {}
         }
     }
 
 
     sealed class UiEvent {
-        data class ShowSnackbar(val message: String):UiEvent()
+        data class ShowSnackbar(val message: String): UiEvent()
         object SavedNote: UiEvent()
     }
 
