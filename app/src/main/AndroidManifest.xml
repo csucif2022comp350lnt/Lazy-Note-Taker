@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.csuci.lazynotetaker">
 
-    <application
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-        android:name="edu.csuci.lazynotetaker.NoteApp"
+    <application
 
         android:allowBackup="true"
 

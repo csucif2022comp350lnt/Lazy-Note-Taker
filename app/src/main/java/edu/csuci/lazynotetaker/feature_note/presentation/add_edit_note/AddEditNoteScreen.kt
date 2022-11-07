@@ -104,8 +104,9 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // getImage()
-                          dialogState.value = true
+                    // TODO: getImage()
+                         // dialogState.value = true
+
                 //viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
                 backgroundColor = MaterialTheme.colors.primary
