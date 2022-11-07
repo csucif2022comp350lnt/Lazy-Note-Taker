@@ -58,7 +58,7 @@ class URIPathHelper {
         val column = "_data"
         val projection = arrayOf(column)
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,null)
+            cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs,null)
             if (cursor != null && cursor.moveToFirst()) {
                 val column_index: Int = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(column_index)

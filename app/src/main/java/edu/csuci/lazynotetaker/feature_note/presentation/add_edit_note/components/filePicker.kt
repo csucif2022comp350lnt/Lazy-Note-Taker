@@ -2,9 +2,10 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.componen
 
 import android.app.Activity
 import android.content.*
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.appcompat.app.AppCompatActivity
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.startActivityForResult
 
-class filePicker {
+class filePicker: AppCompatActivity() {
     val REQUEST_CODE = 100
 
     private fun openGalleryForImage() {
@@ -15,7 +16,6 @@ class filePicker {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
-            imageView.setImageURI(data?.data) // handle chosen image
         }
     }
 }

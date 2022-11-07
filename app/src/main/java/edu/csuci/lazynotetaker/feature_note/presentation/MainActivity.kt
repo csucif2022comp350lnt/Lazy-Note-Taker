@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
 import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
 import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
 import dagger.hilt.android.AndroidEntryPoint

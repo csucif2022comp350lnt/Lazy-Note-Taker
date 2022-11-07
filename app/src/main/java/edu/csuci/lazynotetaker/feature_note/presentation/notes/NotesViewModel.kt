@@ -63,6 +63,7 @@ class NotesViewModel @Inject constructor(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
             }
+            else -> {}
         }
     }
     private fun getNotes(noteOrder: NoteOrder) {
