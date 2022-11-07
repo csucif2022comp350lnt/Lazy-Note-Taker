@@ -29,8 +29,6 @@ class CameraIntent: FileProvider() {
 }
     @Composable
     fun ComposeCameraIntent(context: Context){
-
-
             Column(
                 modifier = Modifier
                     .padding(bottom = 32.dp),
@@ -53,7 +51,6 @@ try {
 catch (e: IOException){
     print("Fail")
 }
-
                     }
                 ){
                     Text(

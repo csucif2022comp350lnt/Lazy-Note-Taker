@@ -17,11 +17,15 @@ import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
 import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+
             LazyNoteTakerTheme {
                 Surface(
                     color = MaterialTheme.colors.background
