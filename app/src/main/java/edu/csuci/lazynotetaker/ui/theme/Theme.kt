@@ -27,7 +27,7 @@ private val AmoledColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = DarkGray,
     background = White,
-    onBackground = DarkGray,
+    onBackground = LightGray,
     surface = LightBlue,
     onSurface = White
 )
@@ -35,7 +35,7 @@ private val LightColorPalette = lightColors(
 @Composable
 fun lazynotetakerTheme(darkTheme: Boolean = true, content: @Composable() () -> Unit) {
     MaterialTheme(
-        colors = AmoledColorPalette,
+        colors = LightColorPalette,
         typography = Typography,
         shapes = Shapes,
         content = content
