@@ -103,8 +103,8 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    // TODO: getImage()
-                         // dialogState.value = true
+
+                          dialogState.value = true
 
                 //viewModel.onEvent(AddEditNoteEvent.SaveNote)
                 },
