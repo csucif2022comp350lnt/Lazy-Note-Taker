@@ -1,5 +1,6 @@
 package edu.csuci.lazynotetaker.feature_note.domain.model
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import edu.csuci.lazynotetaker.ui.theme.*
@@ -15,7 +16,7 @@ data class Note(
 )
 {
     companion object {
-        val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+        val noteColors = listOf(Red, Green, Violet, Blue, Pink)
     }
 }
 

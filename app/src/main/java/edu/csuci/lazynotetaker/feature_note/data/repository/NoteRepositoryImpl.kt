@@ -1,5 +1,8 @@
-package edu.csuci.lazynotetaker.feature_note.data.repository
+package edu.csuci.LazyNoteTaker.feature_note.data.repository
 
+import edu.csuci.lazynotetaker.feature_note.data.data_source.NoteDao
+import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.repository.NoteRepository
 import edu.csuci.lazynotetaker.feature_note.data.data_source.NoteDao
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.repository.NoteRepository

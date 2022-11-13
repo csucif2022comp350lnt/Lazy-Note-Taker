@@ -14,7 +14,7 @@ import androidx.navigation.navArgument
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
-import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
+import edu.csuci.lazynotetaker.ui.theme.lazynotetakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LazyNoteTakerTheme {
+            lazynotetakerTheme {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
@@ -30,9 +30,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesScreen.route
+                        startDestination = Screen.NotesStreen.route
                     )   {
-                        composable(route = Screen.NotesScreen.route) {
+                        composable(route = Screen.NotesStreen.route) {
                             NotesScreen(navController = navController)
                         }
                         composable(
