@@ -4,11 +4,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import edu.csuci.lazynotetaker.ui.theme.DarkGray
-import edu.csuci.lazynotetaker.ui.theme.LightBlue
-import edu.csuci.lazynotetaker.ui.theme.Shapes
-import edu.csuci.lazynotetaker.ui.theme.Typography
 
 private val DarkColorPalette = darkColors(
     primary = White,
@@ -35,7 +30,7 @@ private val LightColorPalette = lightColors(
 @Composable
 fun lazynotetakerTheme(darkTheme: Boolean = true, content: @Composable() () -> Unit) {
     MaterialTheme(
-        colors = LightColorPalette,
+        colors = AmoledColorPalette,
         typography = Typography,
         shapes = Shapes,
         content = content

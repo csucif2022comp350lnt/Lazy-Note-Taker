@@ -8,17 +8,15 @@
 
         android:allowBackup="true"
 
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/lnticon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/lnticon"
         android:supportsRtl="true"
 
-        android:theme="@style/Theme.lazynotetaker"
-        android:dataExtractionRules="@xml/data_extraction_rules">
-
+        android:theme="@style/Theme.lazynotetaker">
 
         <provider
-            android:name="edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.ComposeFileProvider"
+            android:name=".feature_note.presentation.add_edit_note.components.ComposeFileProvider"
             android:authorities="edu.csuci.lazynotetaker.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">
@@ -26,6 +24,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
 
         <activity
             android:name="edu.csuci.lazynotetaker.feature_note.presentation.MainActivity"

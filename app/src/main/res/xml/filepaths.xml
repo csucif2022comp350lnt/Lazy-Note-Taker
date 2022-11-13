@@ -2,11 +2,11 @@
 <paths>
     <files-path
         name="imagesfiles"
-        path="imagesfiles" />
+        path="imagesfiles/" />
     <files-path
         name="ocr_model"
         path="tessdata/" />
     <cache-path
         name="images"
-        path="images" />
+        path="images/" />
 </paths>
