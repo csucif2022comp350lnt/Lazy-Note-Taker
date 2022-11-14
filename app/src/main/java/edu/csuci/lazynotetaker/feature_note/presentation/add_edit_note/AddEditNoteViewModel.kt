@@ -2,7 +2,6 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,8 +10,7 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.NoteTextFieldState
+import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -62,10 +60,13 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.title,
                             isHintVisible =  false
                         )
-                        _noteContent.value = noteContent.value.copy(
-                            text = page.content,
-                            isHintVisible =  false
-                        )
+                        noteUseCases.getPageUseCase(noteId).also { page ->
+                            _noteContent.value = noteContent.value.copy(
+                                text = page.content,
+                                isHintVisible =  false
+                            )
+                        }
+
                         _noteColor.value = note.color
 
                     }
@@ -107,7 +108,6 @@ class AddEditNoteViewModel @Inject constructor(
                         noteUseCases.addNoteUseCase(
                             Note(
                                 title = noteTitle.value.text,
-                                content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
                                 id = currentNoteId

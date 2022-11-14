@@ -58,9 +58,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesStreen.route
+                        startDestination = Screen.NotesScreen.route
                     )   {
-                        composable(route = Screen.NotesStreen.route) {
+                        composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
                         }
                         composable(

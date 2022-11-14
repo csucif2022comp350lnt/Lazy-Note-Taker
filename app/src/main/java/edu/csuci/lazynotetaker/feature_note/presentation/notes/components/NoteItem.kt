@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 
 @Composable
 fun NoteItem(
@@ -74,13 +75,13 @@ fun NoteItem(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = note.content,
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface,
-                    maxLines = 5,
-                    overflow = TextOverflow.Ellipsis
-                )
+//                Text(
+//                    text = note.content,
+//                    style = MaterialTheme.typography.body1,
+//                    color = MaterialTheme.colors.onSurface,
+//                    maxLines = 5,
+//                    overflow = TextOverflow.Ellipsis
+//                )
             }
             IconButton(
                 onClick = onDeleteClick,
