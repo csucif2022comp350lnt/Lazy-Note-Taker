@@ -26,17 +26,20 @@ import java.io.InputStream
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     companion object {
         var isFileChooser : Boolean = false
         var text: String = "null"
         var imageFile: Uri = "null".toUri()
+        var insertText: String = ""
 
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             Log.i("datareturn", data.toString())
+
+
             if (isFileChooser) {
                 imageFile = data!!.data!!
             }
@@ -46,6 +49,8 @@ class MainActivity : ComponentActivity() {
 
         }
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

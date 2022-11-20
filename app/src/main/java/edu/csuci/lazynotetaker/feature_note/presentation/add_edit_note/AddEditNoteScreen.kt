@@ -28,13 +28,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.imageFile
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.isFileChooser
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.CompleteDialogContent
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.ComposeFileProvider
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.*
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,6 +48,23 @@ fun AddEditNoteScreen(
     noteColor: Int,
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
+
+    val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the cropped image
+            var imageUri = result.uriContent
+            Log.i("imageUri res: ", imageUri.toString())
+        } else {
+            // an error occurred cropping
+            val exception = result.error
+        }
+    }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        val cropOptions = CropImageContractOptions(uri, CropImageOptions())
+        imageCropLauncher.launch(cropOptions)
+    }
+
     val getComposeFileProvider = ComposeFileProvider()
     var hasImage by remember {
         mutableStateOf(false)
@@ -132,20 +150,12 @@ fun AddEditNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    /*val directory = File(context.cacheDir, "images")
-                    directory.mkdirs()
-                    val file = File(directory,"${Calendar.getInstance().timeInMillis}.png")
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        context.packageName + ".fileprovider",
-                        file
-                    )*/
-
                     val uri = getComposeFileProvider.getImageUri(context)
                     imageUri = uri
                     imageFile = uri
                     Log.i("Uri: ", imageFile.toString())
-                    cameraLauncher.launch(uri)
+
+                    imagePickerLauncher.launch("image/*")
                     ///imagePicker.launch("image/*")
                     state.isColorSectionVisible = false
 
@@ -254,7 +264,7 @@ fun AddEditNoteScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
-                text = contentState.text,
+                text = contentState.text + MainActivity.insertText,
                 hint = contentState.hint,
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
