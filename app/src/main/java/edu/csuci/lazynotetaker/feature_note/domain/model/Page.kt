@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 data class Page(
     val content: String,
     val pageNumber: Int,
-    @PrimaryKey val id: Int? = null
+    val id: Int? = null,
+    @PrimaryKey val pageId: Int? = null
 )
+
 class InvalidPageException(message: String): Exception(message)

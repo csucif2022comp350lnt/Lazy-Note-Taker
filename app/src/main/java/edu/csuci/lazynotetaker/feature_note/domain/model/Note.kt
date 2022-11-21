@@ -12,6 +12,7 @@ data class Note(
     val title: String,
     val timestamp: Long,
     val color: Int,
+    val numOfPages: Int,
     @PrimaryKey val id: Int? = null
 )
 {

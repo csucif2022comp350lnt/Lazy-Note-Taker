@@ -15,9 +15,11 @@ interface NoteRepository {
 
     suspend fun getPageById(id: Int): Page?
 
+    suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int): Page?
+
     suspend fun insertNote(note: Note)
 
-    suspend fun insertPage(page: Page)
+    suspend fun insertPage(page: Page, pageNumber: Int)
 
     suspend fun deleteNote(note: Note)
 

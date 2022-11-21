@@ -25,11 +25,14 @@ interface NoteDao {
     @Query("SELECT * FROM page WHERE id = :id")
     suspend fun getPageById(id: Int) :Page?
 
+    @Query("SELECT * FROM page WHERE id = :id AND pageNumber = :pageNumber")
+    suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int) :Page?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPage(page: Page)
+    suspend fun insertPage(page: Page, pageNumber: Int)
 
     @Delete
     suspend fun deleteNote(note: Note)

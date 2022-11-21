@@ -27,6 +27,10 @@ class NoteRepositoryImpl(
         return dao.getPageById(id)
     }
 
+    override suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int): Page? {
+        return dao.getPageByIdAndPageNumber(id, pageNumber)
+    }
+
     override suspend fun insertNote(note: Note) {
         dao.insertNote(note)
     }
@@ -39,8 +43,8 @@ class NoteRepositoryImpl(
         dao.deletePage(page)
     }
 
-    override suspend fun insertPage(page: Page) {
-        dao.insertPage(page)
+    override suspend fun insertPage(page: Page, pageNumber: Int) {
+        dao.insertPage(page, pageNumber)
     }
 
     override suspend fun getNotesWithPages(id: Int): List<NotesWithPages> {
