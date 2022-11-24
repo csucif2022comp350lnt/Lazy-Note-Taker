@@ -3,6 +3,7 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
@@ -39,148 +40,151 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.component
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.InputStream
 
+object AddEditNoteScreen: ComponentActivity() {
 
-@Composable
-fun AddEditNoteScreen(
-    context: Context,
-    navController: NavController,
-    noteColor: Int,
-    viewModel: AddEditNoteViewModel = hiltViewModel()
-) {
+    @Composable
+    fun AddEditNoteScreen(
+        context: Context,
+        navController: NavController,
+        noteColor: Int,
+        viewModel: AddEditNoteViewModel = hiltViewModel()
+    ) {
 
-    val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            // use the cropped image
-            var imageUri = result.uriContent
-            Log.i("imageUri res: ", imageUri.toString())
-        } else {
-            // an error occurred cropping
-            val exception = result.error
+        val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
+            if (result.isSuccessful) {
+                // use the cropped image
+                var imageUri = result.uriContent
+                Log.i("imageUri res: ", imageUri.toString())
+            } else {
+                // an error occurred cropping
+                val exception = result.error
+            }
         }
-    }
 
-    val imagePickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        val cropOptions = CropImageContractOptions(uri, CropImageOptions())
-        imageCropLauncher.launch(cropOptions)
-    }
+        val imagePickerLauncher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                val cropOptions = CropImageContractOptions(uri, CropImageOptions())
+                imageCropLauncher.launch(cropOptions)
+                val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
+                OCR.TesseractOCR(this, imagefileUri)
+            }
 
-    val getComposeFileProvider = ComposeFileProvider()
-    var hasImage by remember {
-        mutableStateOf(false)
-    }
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
-
-    val state = viewModel.state.value
-
-    val scaffoldState = rememberScaffoldState()
-
-    val dialogState: MutableState<Boolean> = remember {
-        mutableStateOf(false)
-    }
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            hasImage = uri != null
-            imageUri = uri
-            isFileChooser = true
-            dialogState.value = true
+        val getComposeFileProvider = ComposeFileProvider()
+        var hasImage by remember {
+            mutableStateOf(false)
         }
-    )
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            hasImage = success
-            isFileChooser = false
-            dialogState.value = true
+        var imageUri by remember {
+            mutableStateOf<Uri?>(null)
         }
-    )
+        val titleState = viewModel.noteTitle.value
+        val contentState = viewModel.noteContent.value
 
+        val state = viewModel.state.value
 
+        val scaffoldState = rememberScaffoldState()
 
-
-    val noteBackgroundAnimatable = remember {
-        Animatable(
-            Color(if(noteColor != -1) noteColor else viewModel.noteColor.value)
-
+        val dialogState: MutableState<Boolean> = remember {
+            mutableStateOf(false)
+        }
+        val imagePicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+            onResult = { uri ->
+                hasImage = uri != null
+                imageUri = uri
+                isFileChooser = true
+                dialogState.value = true
+            }
         )
-    }
-    val scope = rememberCoroutineScope()
 
-    if (dialogState.value) {
-        Dialog(
-            onDismissRequest = { dialogState.value = false },
-            content = {
-                //var imageUri: Uri = "null".toUri()
-                //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        val cameraLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.TakePicture(),
+            onResult = { success ->
+                hasImage = success
+                isFileChooser = false
+                dialogState.value = true
+            }
+        )
+
+
+        val noteBackgroundAnimatable = remember {
+            Animatable(
+                Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+
+            )
+        }
+        val scope = rememberCoroutineScope()
+
+        if (dialogState.value) {
+            Dialog(
+                onDismissRequest = { dialogState.value = false },
+                content = {
+                    //var imageUri: Uri = "null".toUri()
+                    //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                     Log.e("ImageUri", "ImageUri2$imageUri")
                     CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
-            },
-            properties = DialogProperties(
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false
+                },
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false
+                )
             )
-        )
-    }
+        }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            when(event) {
-                is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message
-                    )
+        LaunchedEffect(key1 = true) {
+            viewModel.eventFlow.collectLatest { event ->
+                when (event) {
+                    is AddEditNoteViewModel.UiEvent.ShowSnackbar -> {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = event.message
+                        )
 
-                }
-                is AddEditNoteViewModel.UiEvent.SavedNote -> {
-                    navController.navigateUp()
+                    }
+                    is AddEditNoteViewModel.UiEvent.SavedNote -> {
+                        navController.navigateUp()
+                    }
                 }
             }
         }
-    }
 
-    Scaffold(
+        Scaffold(
 
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    val uri = getComposeFileProvider.getImageUri(context)
-                    imageUri = uri
-                    imageFile = uri
-                    Log.i("Uri: ", imageFile.toString())
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        val uri = getComposeFileProvider.getImageUri(context)
+                        imageUri = uri
+                        imageFile = uri
+                        Log.i("Uri: ", imageFile.toString())
 
-                    imagePickerLauncher.launch("image/*")
-                    ///imagePicker.launch("image/*")
-                    state.isColorSectionVisible = false
+                        imagePickerLauncher.launch("image/*")
+                        ///imagePicker.launch("image/*")
+                        state.isColorSectionVisible = false
 
-                },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(imageVector = Icons.Default.Camera, contentDescription = "Get OCR Text")
-            }
-        },
-        scaffoldState = scaffoldState
-    ) { padding->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-                .padding(0.dp)
-        )   {
-            Row(
+                    },
+                    backgroundColor = MaterialTheme.colors.primary
+                ) {
+                    Icon(imageVector = Icons.Default.Camera, contentDescription = "Get OCR Text")
+                }
+            },
+            scaffoldState = scaffoldState
+        ) { padding ->
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(noteBackgroundAnimatable.value)
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background)
+                    .padding(0.dp)
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(noteBackgroundAnimatable.value)
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     if (state.isColorSectionVisible) {
                         Note.noteColors.forEach { color ->
                             val colorInt = color.toArgb()
@@ -210,8 +214,7 @@ fun AddEditNoteScreen(
                                     }
                             )
                         }
-                    }
-                    else {
+                    } else {
                         Box(
                             modifier = Modifier
                                 .size(30.dp)
@@ -229,69 +232,69 @@ fun AddEditNoteScreen(
                         )
                     }
 
-                IconButton(
-                    onClick = {
-                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                    IconButton(
+                        onClick = {
+                            viewModel.onEvent(AddEditNoteEvent.SaveNote)
+                        }
+                    ) {
+                        Icon(
+                            Icons.Filled.Save,
+                            contentDescription = "Save Note",
+                            tint = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.size(30.dp)
+                        )
                     }
-                )  {
-                    Icon(
-                        Icons.Filled.Save,
-                        contentDescription = "Save Note",
-                        tint = MaterialTheme.colors.onSurface,
-                        modifier = Modifier.size(30.dp)
-                    )
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(
+                    text = titleState.text,
+                    hint = titleState.hint,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
+                        state.isColorSectionVisible = false
+                    },
+                    isHintVisible = titleState.isHintVisible,
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.h5
+
+
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                TransparentHintTextField(
+                    text = contentState.text + MainActivity.insertText,
+                    hint = contentState.hint,
+                    onValueChange = {
+                        viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
+                    },
+                    onFocusChange = {
+                        viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
+                        state.isColorSectionVisible = false
+                    },
+                    isHintVisible = contentState.isHintVisible,
+                    textStyle = MaterialTheme.typography.body1,
+                    modifier = Modifier.fillMaxHeight()
+
+                )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(
-                text = titleState.text,
-                hint = titleState.hint,
-                onValueChange = {
-                                viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
-                },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                    state.isColorSectionVisible = false
-                },
-                isHintVisible = titleState.isHintVisible,
-                singleLine = true,
-                textStyle = MaterialTheme.typography.h5
+        }
 
+    }
 
-
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(
-                text = contentState.text + MainActivity.insertText,
-                hint = contentState.hint,
-                onValueChange = {
-                    viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
-                },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                    state.isColorSectionVisible = false
-                },
-                isHintVisible = contentState.isHintVisible,
-                textStyle = MaterialTheme.typography.body1,
-                modifier = Modifier.fillMaxHeight()
-
+    @Composable
+    fun BodyContent() {
+        SelectionContainer() {
+            Text(
+                text = OCR.text,
+                fontSize = 22.sp
             )
         }
 
     }
 
 }
-
-@Composable
-fun BodyContent() {
-    SelectionContainer() {
-        Text(
-            text = OCR.text,
-            fontSize = 22.sp
-        )
-    }
-
-}
-
