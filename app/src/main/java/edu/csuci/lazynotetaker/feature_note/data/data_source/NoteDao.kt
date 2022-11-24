@@ -32,7 +32,7 @@ interface NoteDao {
     suspend fun insertNote(note: Note)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPage(page: Page, pageNumber: Int)
+    suspend fun insertPage(page: Page)
 
     @Delete
     suspend fun deleteNote(note: Note)

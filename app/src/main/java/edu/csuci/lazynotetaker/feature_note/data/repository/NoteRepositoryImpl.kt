@@ -43,8 +43,8 @@ class NoteRepositoryImpl(
         dao.deletePage(page)
     }
 
-    override suspend fun insertPage(page: Page, pageNumber: Int) {
-        dao.insertPage(page, pageNumber)
+    override suspend fun insertPage(page: Page) {
+        dao.insertPage(page)
     }
 
     override suspend fun getNotesWithPages(id: Int): List<NotesWithPages> {

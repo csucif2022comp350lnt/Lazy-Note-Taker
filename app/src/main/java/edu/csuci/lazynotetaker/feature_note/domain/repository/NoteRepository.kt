@@ -19,7 +19,7 @@ interface NoteRepository {
 
     suspend fun insertNote(note: Note)
 
-    suspend fun insertPage(page: Page, pageNumber: Int)
+    suspend fun insertPage(page: Page)
 
     suspend fun deleteNote(note: Note)
 
