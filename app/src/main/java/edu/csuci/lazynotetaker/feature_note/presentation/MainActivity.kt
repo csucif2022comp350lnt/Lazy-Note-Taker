@@ -96,6 +96,7 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 noteColor = color,
                             )
+
                         }
                     }
 

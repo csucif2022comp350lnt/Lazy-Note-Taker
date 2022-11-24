@@ -3,8 +3,6 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -12,7 +10,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -23,18 +20,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.imageFile
-import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity.Companion.isFileChooser
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.*
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
@@ -49,21 +39,6 @@ fun AddEditNoteScreen(
     viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
 
-    val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            // use the cropped image
-            var imageUri = result.uriContent
-            Log.i("imageUri res: ", imageUri.toString())
-        } else {
-            // an error occurred cropping
-            val exception = result.error
-        }
-    }
-
-    val imagePickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        val cropOptions = CropImageContractOptions(uri, CropImageOptions())
-        imageCropLauncher.launch(cropOptions)
-    }
 
     val getComposeFileProvider = ComposeFileProvider()
     var hasImage by remember {
@@ -79,27 +54,7 @@ fun AddEditNoteScreen(
 
     val scaffoldState = rememberScaffoldState()
 
-    val dialogState: MutableState<Boolean> = remember {
-        mutableStateOf(false)
-    }
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            hasImage = uri != null
-            imageUri = uri
-            isFileChooser = true
-            dialogState.value = true
-        }
-    )
 
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
-            hasImage = success
-            isFileChooser = false
-            dialogState.value = true
-        }
-    )
 
 
 
@@ -112,23 +67,8 @@ fun AddEditNoteScreen(
     }
     val scope = rememberCoroutineScope()
 
-    if (dialogState.value) {
-        Dialog(
-            onDismissRequest = { dialogState.value = false },
-            content = {
-                //var imageUri: Uri = "null".toUri()
-                //val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                //callCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                    Log.e("ImageUri", "ImageUri2$imageUri")
-                    CompleteDialogContent("OCR", dialogState, "OK") { BodyContent() }
-            },
-            properties = DialogProperties(
-                dismissOnBackPress = false,
-                dismissOnClickOutside = false
-            )
-        )
-    }
 
+//Move Dialog and cropper stuff to cropper class.
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
@@ -144,7 +84,7 @@ fun AddEditNoteScreen(
             }
         }
     }
-
+val cropper = Cropper(context)
     Scaffold(
 
         floatingActionButton = {
@@ -154,7 +94,7 @@ fun AddEditNoteScreen(
                     imageUri = uri
                     imageFile = uri
                     Log.i("Uri: ", imageFile.toString())
-
+                    dialogState.value = true
                     imagePickerLauncher.launch("image/*")
                     ///imagePicker.launch("image/*")
                     state.isColorSectionVisible = false
@@ -284,14 +224,4 @@ fun AddEditNoteScreen(
 
 }
 
-@Composable
-fun BodyContent() {
-    SelectionContainer() {
-        Text(
-            text = OCR.text,
-            fontSize = 22.sp
-        )
-    }
-
-}
 
