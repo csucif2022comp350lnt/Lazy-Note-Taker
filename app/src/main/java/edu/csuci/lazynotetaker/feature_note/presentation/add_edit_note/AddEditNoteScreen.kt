@@ -115,7 +115,9 @@ object AddEditNoteScreen: ComponentActivity() {
             onResult = { success ->
                 hasImage = success
                 isFileChooser = false
-                dialogState.value = true
+                var uri = success
+                val cropOptions = CropImageContractOptions(imageUri, CropImageOptions())
+                imageCropLauncher.launch(cropOptions)
             }
         )
 
@@ -171,7 +173,7 @@ object AddEditNoteScreen: ComponentActivity() {
                         imageFile = uri
                         Log.i("Uri: ", imageFile.toString())
 
-                        imagePickerLauncher.launch("image/*")
+                        cameraLauncher.launch(imageUri)
                         ///imagePicker.launch("image/*")
                         state.isColorSectionVisible = false
 
