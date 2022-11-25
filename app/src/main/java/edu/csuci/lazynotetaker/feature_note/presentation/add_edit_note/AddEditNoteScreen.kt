@@ -40,7 +40,6 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.component
 import edu.csuci.lazynotetaker.ui.theme.Black
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.InputStream
 
 object AddEditNoteScreen: ComponentActivity() {
 
@@ -52,11 +51,27 @@ object AddEditNoteScreen: ComponentActivity() {
         viewModel: AddEditNoteViewModel = hiltViewModel()
     ) {
 
+        val dialogState: MutableState<Boolean> = remember {
+            mutableStateOf(false)
+        }
+
         val imageCropLauncher = rememberLauncherForActivityResult(CropImageContract()) { result ->
             if (result.isSuccessful) {
                 // use the cropped image
-                var imageUri = result.uriContent
-                Log.i("imageUri res: ", imageUri.toString())
+                //Log.i("imageUri res: ", imageUri.toString())
+                var resultImageUri = result.uriContent
+                var imageFilePath = result.getUriFilePath(context = context, uniqueName = true).toString()
+                if (resultImageUri?.scheme?.contains("content") == true) {
+                    // replace Scheme to file
+                    val builder = Uri.Builder()
+                    builder.scheme("file")
+                        .appendPath(imageFilePath)
+                    val imageUri = builder.build()
+                }
+                Log.i("imageUri: ", imageFilePath.toString())
+                //val imagefileUri: InputStream? = contentResolver.openInputStream(imageUri)
+                OCR.TesseractOCR(context, imageFilePath.toString())
+                dialogState.value = true
             } else {
                 // an error occurred cropping
                 val exception = result.error
@@ -67,8 +82,7 @@ object AddEditNoteScreen: ComponentActivity() {
             rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
                 val cropOptions = CropImageContractOptions(uri, CropImageOptions())
                 imageCropLauncher.launch(cropOptions)
-                val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
-                OCR.TesseractOCR(this, imagefileUri)
+
             }
 
         val getComposeFileProvider = ComposeFileProvider()
@@ -85,9 +99,7 @@ object AddEditNoteScreen: ComponentActivity() {
 
         val scaffoldState = rememberScaffoldState()
 
-        val dialogState: MutableState<Boolean> = remember {
-            mutableStateOf(false)
-        }
+
         val imagePicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent(),
             onResult = { uri ->

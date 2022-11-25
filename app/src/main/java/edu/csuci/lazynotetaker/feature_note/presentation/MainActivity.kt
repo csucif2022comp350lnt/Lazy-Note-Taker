@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             Log.i("datareturn", data.toString())
@@ -45,10 +45,10 @@ class MainActivity : ComponentActivity() {
             }
             Log.i("uritofile", imageFile.toString())
             val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
-            TesseractOCR(this, imagefileUri)
+            //TesseractOCR(this, imagefileUri)
 
         }
-    }
+    }*/
 
 
 
