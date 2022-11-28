@@ -1,5 +1,6 @@
 package edu.csuci.LazyNoteTaker.feature_note.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,21 +11,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import edu.csuci.LazyNoteTaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
-import edu.csuci.LazyNoteTaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
 import edu.csuci.LazyNoteTaker.feature_note.presentation.util.Screen
-import edu.csuci.LazyNoteTaker.ui.theme.LazyNoteTakerTheme
+import edu.csuci.lazynotetaker.ui.theme.LazyNoteTakerTheme
 import dagger.hilt.android.AndroidEntryPoint
+
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+
             LazyNoteTakerTheme {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
+                    val context: Context = this
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
@@ -57,8 +63,10 @@ class MainActivity : ComponentActivity() {
                         )   {
                             val color = it.arguments?.getInt("noteColor") ?: -1
                             AddEditNoteScreen(
+                                context = context,
                                 navController = navController,
-                                noteColor = color
+                                noteColor = color,
+
                             )
                         }
                     }
