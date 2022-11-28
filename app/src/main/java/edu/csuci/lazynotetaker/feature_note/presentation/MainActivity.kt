@@ -26,26 +26,31 @@ import java.io.InputStream
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     companion object {
         var isFileChooser : Boolean = false
         var text: String = "null"
         var imageFile: Uri = "null".toUri()
+        var insertText: String = ""
 
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK){
             Log.i("datareturn", data.toString())
+
+
             if (isFileChooser) {
                 imageFile = data!!.data!!
             }
             Log.i("uritofile", imageFile.toString())
             val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
-            TesseractOCR(this, imagefileUri)
+            //TesseractOCR(this, imagefileUri)
 
         }
-    }
+    }*/
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +91,12 @@ class MainActivity : ComponentActivity() {
 
                         )   {
                             val color = it.arguments?.getInt("noteColor") ?: -1
-                            AddEditNoteScreen(
+                            AddEditNoteScreen.AddEditNoteScreen(
                                 context = context,
                                 navController = navController,
                                 noteColor = color,
                             )
+
                         }
                     }
 

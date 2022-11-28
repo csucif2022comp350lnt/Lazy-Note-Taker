@@ -9,12 +9,11 @@ import com.googlecode.tesseract.android.TessBaseAPI
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 object OCR : Activity() {
         var text = "Open Camera"
 
-    fun TesseractOCR(context: Context, imageUri: InputStream?): String {
+    fun TesseractOCR(context: Context, imageUri: String): String {
 // Create Tesseract instance
         // Create Tesseract instance
         val tess = TessBaseAPI()
@@ -42,7 +41,7 @@ object OCR : Activity() {
         val options = BitmapFactory.Options()
         options.inSampleSize =
             4 // 1 - means max size. 4 - means maxsize/4 size. Don't use value <4, because you need more memory in the heap to store your data.
-            val bitmap = BitmapFactory.decodeStream(imageUri)
+            val bitmap = BitmapFactory.decodeFile(imageUri)
 // Specify image and then recognize it and get result (can be called multiple times during Tesseract lifetime)
         if (bitmap == null){
             Log.w("Bitmap failed","Bitmap missing")
