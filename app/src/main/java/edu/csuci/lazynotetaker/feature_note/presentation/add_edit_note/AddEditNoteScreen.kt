@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -70,6 +71,7 @@ fun AddEditNoteScreen(
     }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
+    val pageNumber = viewModel.currentPageNumber.value
 
     val state = viewModel.state.value
 
@@ -375,6 +377,7 @@ fun PagerIndicator(
             (widthInPx / 2 - viewportSize.width / 2).toInt()
         )
     }
+
 
 
     LazyRow(

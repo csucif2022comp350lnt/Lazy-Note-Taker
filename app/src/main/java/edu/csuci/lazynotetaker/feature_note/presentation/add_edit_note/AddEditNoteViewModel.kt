@@ -11,12 +11,9 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.csuci.lazynotetaker.feature_note.domain.model.Page
-import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -56,12 +53,12 @@ class AddEditNoteViewModel @Inject constructor(
 
     private var currentNoteId: Int? = null
     private val _currentPageNumber = mutableStateOf(
-        NoteTextFieldState(
+        PageNumberState(
             pageNumber = 0
         )
     )
     private var numberOfPages = 1
-    private val currentPageNumber = 0
+    val currentPageNumber: State<PageNumberState> = _currentPageNumber
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -73,7 +70,7 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.title,
                             isHintVisible =  false
                         )
-                        noteUseCases.getPageUseCase(noteId, currentPageNumber).also { page ->
+                        noteUseCases.getPageUseCase(noteId, 0).also { page ->
                             if (page != null) {
                                 _noteContent.value = noteContent.value.copy(
                                     text = page.content,
@@ -104,7 +101,7 @@ class AddEditNoteViewModel @Inject constructor(
                 )
             }
             is AddEditNoteEvent.ChangePage -> {
-                _currentPageNumber.value = currentPageNumber
+                _currentPageNumber.value = currentPageNumber.value
 
             }
             is AddEditNoteEvent.EnteredContent -> {
@@ -136,7 +133,7 @@ class AddEditNoteViewModel @Inject constructor(
                         noteUseCases.addPageUseCase(
                             Page(
                                 content = noteContent.value.text,
-                                pageNumber = currentPageNumber,
+                                pageNumber = currentPageNumber.value.pageNumber,
                                 id = currentNoteId!!
                             )
                         )
@@ -162,17 +159,17 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
-    private fun getPages(noteOrder: NoteOrder) {
-        getPagesJob?.cancel()
-        getPagesJob = noteUseCases.getPagesUseCase()
-            .onEach { pages ->
-                _state.value = state.value.copy(
-                    pages = pages
-                )
-
-            }
-            .launchIn(viewModelScope)
-    }
+//    private fun getPages(noteOrder: NoteOrder) {
+//        getPagesJob?.cancel()
+//        getPagesJob = noteUseCases.getPagesUseCase()
+//            .onEach { pages ->
+//                _state.value = state.value.copy(
+//                    pages = pages
+//                )
+//
+//            }
+//            .launchIn(viewModelScope)
+//    }
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
