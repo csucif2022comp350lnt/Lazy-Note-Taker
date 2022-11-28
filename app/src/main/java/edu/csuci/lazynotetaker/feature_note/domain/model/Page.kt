@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(primaryKeys = ["id", "pageNumber"])
 data class Page(
     val content: String,
-    val id: Int? = null,
+    val id: Int,
     val pageNumber: Int
 )
 

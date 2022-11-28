@@ -11,6 +11,7 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import edu.csuci.lazynotetaker.feature_note.domain.model.Page
+import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -30,6 +31,7 @@ class AddEditNoteViewModel @Inject constructor(
 
     private val _state = mutableStateOf(AddEditNoteState())
     val state: State<AddEditNoteState> = _state
+    private var getPagesJob: Job? = null
 
 
     private val _noteTitle = mutableStateOf(
@@ -53,8 +55,13 @@ class AddEditNoteViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Int? = null
-    private var currentPageNumber = 1
+    private val _currentPageNumber = mutableStateOf(
+        NoteTextFieldState(
+            pageNumber = 0
+        )
+    )
     private var numberOfPages = 1
+    private val currentPageNumber = 0
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -95,6 +102,10 @@ class AddEditNoteViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused &&
                             noteTitle.value.text.isBlank()
                 )
+            }
+            is AddEditNoteEvent.ChangePage -> {
+                _currentPageNumber.value = currentPageNumber
+
             }
             is AddEditNoteEvent.EnteredContent -> {
                 _noteContent.value = noteContent.value.copy(
@@ -151,19 +162,22 @@ class AddEditNoteViewModel @Inject constructor(
         }
     }
 
+    private fun getPages(noteOrder: NoteOrder) {
+        getPagesJob?.cancel()
+        getPagesJob = noteUseCases.getPagesUseCase()
+            .onEach { pages ->
+                _state.value = state.value.copy(
+                    pages = pages
+                )
+
+            }
+            .launchIn(viewModelScope)
+    }
 
     sealed class UiEvent {
         data class ShowSnackbar(val message: String): UiEvent()
         object SavedNote: UiEvent()
     }
-//    private fun getPages() {
-//        getPagesJob = noteUseCases.getPagesUseCase().onEach { notes ->
-//                _state.value = state.value.copy(
-//                    page = page
-//                )
-//
-//            }
-//            .launchIn(viewModelScope)
-//    }
+
 
 }
