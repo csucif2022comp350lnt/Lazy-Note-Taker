@@ -71,7 +71,7 @@ fun AddEditNoteScreen(
     }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
-    val pageNumber = viewModel.currentPageNumber.value
+    //val pageNumberState = viewModel.currentPageNumber.value
 
     val state = viewModel.state.value
 
@@ -289,9 +289,16 @@ fun AddEditNoteScreen(
                 val pagerState = rememberPagerState(initialPage = 0)
 
                 HorizontalPager(
+
                     count = 10,
                     state = pagerState,
                 ) {
+                    LaunchedEffect(it){
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+
+                        viewModel.onEvent(AddEditNoteEvent.ChangePage(currentPage))
+
+                    }
                     TransparentHintTextField(
                 text = contentState.text,
                 hint = contentState.hint,
@@ -318,7 +325,7 @@ fun AddEditNoteScreen(
                 PagerIndicator(
                     pagerState = pagerState,
                     indicatorSize = 20.dp,
-                    indicatorCount = 7,
+                    indicatorCount = 6,
                     activeColor = noteBackgroundAnimatable.value,
                     inActiveColor = MaterialTheme.colors.onBackground,
                     indicatorShape = CutCornerShape(10.dp)

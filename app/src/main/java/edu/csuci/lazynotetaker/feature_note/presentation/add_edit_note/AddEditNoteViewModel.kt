@@ -51,7 +51,7 @@ class AddEditNoteViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentNoteId: Int? = null
+    private var currentNoteId: Int = 0
     private val _currentPageNumber = mutableStateOf(
         PageNumberState(
             pageNumber = 0
@@ -65,7 +65,7 @@ class AddEditNoteViewModel @Inject constructor(
             if(noteId != -1) {
                 viewModelScope.launch {
                     noteUseCases.getNoteUseCase(noteId)?.also{ note ->
-                        currentNoteId = note.id
+                        currentNoteId = note.id!!
                         _noteTitle.value = noteTitle.value.copy(
                             text = note.title,
                             isHintVisible =  false
@@ -134,7 +134,7 @@ class AddEditNoteViewModel @Inject constructor(
                             Page(
                                 content = noteContent.value.text,
                                 pageNumber = currentPageNumber.value.pageNumber,
-                                id = currentNoteId!!
+                                id = currentNoteId
                             )
                         )
 
