@@ -59,31 +59,29 @@ object AddEditNoteScreen: ComponentActivity() {
             if (result.isSuccessful) {
                 // use the cropped image
                 //Log.i("imageUri res: ", imageUri.toString())
-                var resultImageUri = result.uriContent
-                var imageFilePath = result.getUriFilePath(context = context, uniqueName = true).toString()
+                val resultImageUri = result.uriContent
+                val imageFilePath = result.getUriFilePath(context = context, uniqueName = true).toString()
                 if (resultImageUri?.scheme?.contains("content") == true) {
                     // replace Scheme to file
                     val builder = Uri.Builder()
                     builder.scheme("file")
                         .appendPath(imageFilePath)
-                    val imageUri = builder.build()
+                    builder.build()
                 }
-                Log.i("imageUri: ", imageFilePath.toString())
-                //val imagefileUri: InputStream? = contentResolver.openInputStream(imageUri)
-                OCR.TesseractOCR(context, imageFilePath.toString())
+                Log.i("imageUri: ", imageFilePath)
+                OCR.TesseractOCR(context, imageFilePath)
                 dialogState.value = true
             } else {
                 // an error occurred cropping
-                val exception = result.error
+                result.error
             }
         }
 
-        val imagePickerLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-                val cropOptions = CropImageContractOptions(uri, CropImageOptions())
-                imageCropLauncher.launch(cropOptions)
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            val cropOptions = CropImageContractOptions(uri, CropImageOptions())
+            imageCropLauncher.launch(cropOptions)
 
-            }
+        }
 
         val getComposeFileProvider = ComposeFileProvider()
         var hasImage by remember {
@@ -106,7 +104,8 @@ object AddEditNoteScreen: ComponentActivity() {
                 hasImage = uri != null
                 imageUri = uri
                 isFileChooser = true
-                dialogState.value = true
+                val cropOptions = CropImageContractOptions(imageUri, CropImageOptions())
+                imageCropLauncher.launch(cropOptions)
             }
         )
 
@@ -115,7 +114,7 @@ object AddEditNoteScreen: ComponentActivity() {
             onResult = { success ->
                 hasImage = success
                 isFileChooser = false
-                var uri = success
+                success
                 val cropOptions = CropImageContractOptions(imageUri, CropImageOptions())
                 imageCropLauncher.launch(cropOptions)
             }
@@ -174,7 +173,7 @@ object AddEditNoteScreen: ComponentActivity() {
                         Log.i("Uri: ", imageFile.toString())
 
                         cameraLauncher.launch(imageUri)
-                        ///imagePicker.launch("image/*")
+                        //imagePicker.launch("image/*")
                         state.isColorSectionVisible = false
 
                     },

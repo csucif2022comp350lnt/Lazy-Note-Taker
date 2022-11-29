@@ -11,7 +11,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 object OCR : Activity() {
-        var text = "Open Camera"
+        var text = ""
 
     fun TesseractOCR(context: Context, imageUri: String): String {
 // Create Tesseract instance
