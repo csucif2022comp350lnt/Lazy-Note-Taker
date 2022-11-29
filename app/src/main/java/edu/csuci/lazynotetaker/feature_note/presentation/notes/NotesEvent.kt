@@ -2,6 +2,7 @@ package edu.csuci.lazynotetaker.feature_note.presentation.notes
 
 
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
+import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 import edu.csuci.lazynotetaker.feature_note.domain.util.NoteOrder
 
 sealed class NotesEvent {

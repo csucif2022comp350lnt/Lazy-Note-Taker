@@ -23,7 +23,7 @@ interface NoteRepository {
 
     suspend fun deleteNote(note: Note)
 
-    suspend fun deletePage(page: Page)
+    suspend fun deletePage(id: Int)
 
     suspend fun getNotesWithPages(id: Int): List<NotesWithPages>
 }

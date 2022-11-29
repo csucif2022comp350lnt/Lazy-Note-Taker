@@ -48,6 +48,7 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {
                     noteUseCases.deleteNoteUseCase(event.note)
+                    event.note.id?.let { noteUseCases.deletePageUseCase(it) }
                     recentlyDeletedNote = event.note
                 }
             }

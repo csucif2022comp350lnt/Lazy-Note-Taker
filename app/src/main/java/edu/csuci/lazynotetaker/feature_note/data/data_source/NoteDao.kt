@@ -37,8 +37,8 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(note: Note)
 
-    @Delete
-    suspend fun deletePage(page: Page)
+    @Query("DELETE from page WHERE id = :id")
+    suspend fun deletePage(id: Int)
 
     @Transaction
     @Query("SELECT * FROM note WHERE id = :id")

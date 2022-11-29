@@ -1,11 +1,13 @@
 package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
+import androidx.compose.material.TextField
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
@@ -52,13 +54,13 @@ class AddEditNoteViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Int? = null
-    private val _currentPageNumber = mutableStateOf(
+    private var _currentPageNumber = mutableStateOf(
         PageNumberState(
             pageNumber = 0
         )
     )
-    private var numberOfPages = 1
-    val currentPageNumber: State<PageNumberState> = _currentPageNumber
+    private var numberOfPages = 10
+    var currentPageNumber: State<PageNumberState> = _currentPageNumber
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -70,22 +72,33 @@ class AddEditNoteViewModel @Inject constructor(
                             text = note.title,
                             isHintVisible =  false
                         )
-                        noteUseCases.getPageUseCase(noteId, 0).also { page ->
-                            if (page != null) {
-                                _noteContent.value = noteContent.value.copy(
-                                    text = page.content,
-                                    isHintVisible =  false
-                                )
-                            }
-                        }
 
                         _noteColor.value = note.color
 
                     }
+
+
+                    currentNoteId?.let {
+                        noteUseCases.getPageUseCase(
+                            it, currentPageNumber.value.pageNumber
+                        ).also { page ->
+                            if (page != null) {
+                                _noteContent.value = noteContent.value.copy(
+                                    text = page.content,
+                                    isHintVisible = false
+                                )
+                            }
+
+                        }
+                    }
+
+
+
                 }
             }
         }
     }
+
 
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
@@ -99,10 +112,6 @@ class AddEditNoteViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused &&
                             noteTitle.value.text.isBlank()
                 )
-            }
-            is AddEditNoteEvent.ChangePage -> {
-                _currentPageNumber.value = currentPageNumber.value
-
             }
             is AddEditNoteEvent.EnteredContent -> {
                 _noteContent.value = noteContent.value.copy(
@@ -118,18 +127,37 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.ChangeColor -> {
                 _noteColor.value = event.color
             }
+            is AddEditNoteEvent.ChangePage -> {
+                currentPageNumber.value.pageNumber = event.pageNumber
+                viewModelScope.launch {
+                    currentNoteId?.let {
+                        noteUseCases.getPageUseCase(
+                            it, currentPageNumber.value.pageNumber
+                        ).also { page ->
+                            if (page != null) {
+                                _noteContent.value = noteContent.value.copy(
+                                    text = page.content,
+                                    isHintVisible = false
+                                )
+                            } else {
+                                _noteContent.value = noteContent.value.copy(
+                                    text = "",
+                                    isHintVisible = true
+                                )
+                            }
+
+                        }
+                    }
+
+
+
+                }
+
+            }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
-                        noteUseCases.addNoteUseCase(
-                            Note(
-                                title = noteTitle.value.text,
-                                timestamp = System.currentTimeMillis(),
-                                color = noteColor.value,
-                                id = currentNoteId,
-                                numOfPages = numberOfPages
-                            )
-                        )
+
                         noteUseCases.addPageUseCase(
                             Page(
                                 content = noteContent.value.text,
@@ -138,7 +166,7 @@ class AddEditNoteViewModel @Inject constructor(
                             )
                         )
 
-                        _eventFlow.emit(UiEvent.SavedNote)
+                       // _eventFlow.emit(UiEvent.SavedNote)
 
                     } catch(e: InvalidNoteException) {
                         _eventFlow.emit(

@@ -7,7 +7,7 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.PageNumbe
 @Entity(primaryKeys = ["id", "pageNumber"])
 data class Page(
     val content: String,
-    val id: Int,
+    val id: Int = 0,
     val pageNumber: Int
 )
 

@@ -39,8 +39,8 @@ class NoteRepositoryImpl(
         dao.deleteNote(note)
     }
 
-    override suspend fun deletePage(page: Page){
-        dao.deletePage(page)
+    override suspend fun deletePage(id: Int){
+        dao.deletePage(id)
     }
 
     override suspend fun insertPage(page: Page) {
