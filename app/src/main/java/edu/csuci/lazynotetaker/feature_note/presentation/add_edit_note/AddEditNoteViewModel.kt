@@ -85,18 +85,14 @@ class AddEditNoteViewModel @Inject constructor(
 
                                 }
                         }
+
                         _noteColor.value = note.color
+
                     }
-
-
-
-
-
                 }
             }
         }
     }
-
 
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
@@ -181,7 +177,6 @@ class AddEditNoteViewModel @Inject constructor(
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
-
                         noteUseCases.addNoteUseCase(
                             Note(
                                 title = noteTitle.value.text,
