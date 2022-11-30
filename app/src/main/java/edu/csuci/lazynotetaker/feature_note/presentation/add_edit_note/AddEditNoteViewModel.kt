@@ -2,7 +2,6 @@ package edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -11,9 +10,7 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.InvalidNoteException
 import edu.csuci.lazynotetaker.feature_note.domain.model.Note
 import edu.csuci.lazynotetaker.feature_note.domain.use_case.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
-import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.NoteTextFieldState
-import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesState
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -73,7 +70,6 @@ class AddEditNoteViewModel @Inject constructor(
             }
         }
     }
-
     fun onEvent(event: AddEditNoteEvent) {
         when(event) {
             is AddEditNoteEvent.EnteredTitle -> {
@@ -92,11 +88,18 @@ class AddEditNoteViewModel @Inject constructor(
                     text = event.value
                 )
             }
+            is AddEditNoteEvent.OCRInsert -> {
+                _noteContent.value = noteContent.value.copy(
+                    text = _noteContent.value.text + event.value
+                )
+                OCR.text = ""
+            }
             is AddEditNoteEvent.ChangeContentFocus -> {
                 _noteContent.value = noteContent.value.copy(
                     isHintVisible = !event.focusState.isFocused &&
                             noteContent.value.text.isBlank()
                 )
+
             }
             is AddEditNoteEvent.ChangeColor -> {
                 _noteColor.value = event.color

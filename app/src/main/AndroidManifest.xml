@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.csuci.lazynotetaker">
-
+   <uses-permission android:name="android.permission.CAMERA" />
     <application
 
         android:name="edu.csuci.lazynotetaker.NoteApp"
@@ -14,6 +14,10 @@
         android:supportsRtl="true"
 
         android:theme="@style/Theme.lazynotetaker">
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"
+            />
 
         <provider
             android:name=".feature_note.presentation.add_edit_note.components.ComposeFileProvider"

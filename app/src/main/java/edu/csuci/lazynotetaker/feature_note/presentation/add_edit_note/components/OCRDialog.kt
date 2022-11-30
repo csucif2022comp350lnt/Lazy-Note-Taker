@@ -12,8 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
+import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteViewModel
 
-    @Composable
+
+@Composable
     fun CompleteDialogContent(
         title: String,
         dialogState: MutableState<Boolean>,
@@ -34,7 +38,7 @@ import androidx.compose.ui.unit.sp
             ) {
                 TitleAndButton(title, dialogState)
                 AddBody(content)
-                BottomButtons(successButtonText, dialogState = dialogState)
+                BottomButtons(dialogState = dialogState)
             }
         }
     }
@@ -65,7 +69,10 @@ import androidx.compose.ui.unit.sp
     }
 
     @Composable
-    private fun BottomButtons(successButtonText: String, dialogState: MutableState<Boolean>) {
+    private fun BottomButtons(
+        dialogState: MutableState<Boolean>,
+        viewModel: AddEditNoteViewModel = hiltViewModel()
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(1f)
@@ -77,11 +84,12 @@ import androidx.compose.ui.unit.sp
             Button(
                 onClick = {
                     dialogState.value = false
+                    viewModel.onEvent(AddEditNoteEvent.OCRInsert(OCR.text))
                 },
                 modifier = Modifier.width(100.dp),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Text(text = successButtonText, fontSize = 20.sp)
+                Text(text = "Insert", fontSize = 20.sp)
             }
 
         }
