@@ -77,18 +77,7 @@ fun NotesScreen(
                     )
 
                 }
-                /*IconButton(
-                    onClick = {
-                        navController.navigate(Screen.SettingsScreen.route)
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        tint = MaterialTheme.colors.primary,
-                        contentDescription = "Settings Wheel"
-                    )
 
-                }*/
             }
             AnimatedVisibility(
                 visible = state.isOrderSectionVisible,
