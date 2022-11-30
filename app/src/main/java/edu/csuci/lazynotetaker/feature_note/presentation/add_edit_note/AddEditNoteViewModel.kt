@@ -66,31 +66,29 @@ class AddEditNoteViewModel @Inject constructor(
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
             if(noteId != -1) {
                 viewModelScope.launch {
-                    noteUseCases.getNoteUseCase(noteId)?.also{ note ->
+                    noteUseCases.getNoteUseCase(noteId)?.also { note ->
                         currentNoteId = note.id
                         _noteTitle.value = noteTitle.value.copy(
                             text = note.title,
-                            isHintVisible =  false
+                            isHintVisible = false
                         )
+                        if (noteId != null) {
 
-                        _noteColor.value = note.color
+                            noteUseCases.getPageUseCase(noteId, currentPageNumber.value.pageNumber)
+                                ?.also { page ->
+                                    if (page != null) {
+                                        _noteContent.value = noteContent.value.copy(
+                                            text = page.content,
+                                            isHintVisible = false
+                                        )
+                                    }
 
-                    }
-
-
-                    currentNoteId?.let {
-                        noteUseCases.getPageUseCase(
-                            it, currentPageNumber.value.pageNumber
-                        ).also { page ->
-                            if (page != null) {
-                                _noteContent.value = noteContent.value.copy(
-                                    text = page.content,
-                                    isHintVisible = false
-                                )
-                            }
-
+                                }
                         }
+                        _noteColor.value = note.color
                     }
+
+
 
 
 
@@ -128,11 +126,14 @@ class AddEditNoteViewModel @Inject constructor(
                 _noteColor.value = event.color
             }
             is AddEditNoteEvent.ChangePage -> {
-                currentPageNumber.value.pageNumber = event.pageNumber
-                viewModelScope.launch {
-                    currentNoteId?.let {
+                if (event.pageNumber != null  && currentNoteId != null) {
+                    currentPageNumber.value.pageNumber = event.pageNumber
+                    noteContent.value.copy(
+                        text = ""
+                    )
+                    viewModelScope.launch {
                         noteUseCases.getPageUseCase(
-                            it, currentPageNumber.value.pageNumber
+                            currentNoteId!!, event.pageNumber
                         ).also { page ->
                             if (page != null) {
                                 _noteContent.value = noteContent.value.copy(
@@ -147,26 +148,61 @@ class AddEditNoteViewModel @Inject constructor(
                             }
 
                         }
+
+
                     }
-
-
-
                 }
+//                currentPageNumber.value.pageNumber = event.pageNumber
+//                viewModelScope.launch {
+//
+//                    currentNoteId?.let {
+//                        noteUseCases.getPageUseCase(currentNoteId!!, event.pageNumber
+//                        ).also { page ->
+//                            if (page != null) {
+//                                _noteContent.value = noteContent.value.copy(
+//                                    text = page.content,
+//                                    isHintVisible = false
+//                                )
+//                            } else {
+//                                _noteContent.value = noteContent.value.copy(
+//                                    text = "",
+//                                    isHintVisible = true
+//                                )
+//                            }
+//
+//                        }
+//                    }
+//
+//
+//
+//                }
 
             }
             is AddEditNoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
 
-                        noteUseCases.addPageUseCase(
-                            Page(
-                                content = noteContent.value.text,
-                                pageNumber = currentPageNumber.value.pageNumber,
-                                id = currentNoteId!!
+                        noteUseCases.addNoteUseCase(
+                            Note(
+                                title = noteTitle.value.text,
+                                timestamp = System.currentTimeMillis(),
+                                color = noteColor.value,
+                                id = currentNoteId,
+                                numOfPages = numberOfPages
                             )
                         )
 
-                       // _eventFlow.emit(UiEvent.SavedNote)
+                        if (currentNoteId != null) {
+                            noteUseCases.addPageUseCase(
+                                Page(
+                                    content = noteContent.value.text,
+                                    pageNumber = currentPageNumber.value.pageNumber,
+                                    id = currentNoteId!!
+                                )
+                            )
+                        }
+
+                       //_eventFlow.emit(UiEvent.SavedNote)
 
                     } catch(e: InvalidNoteException) {
                         _eventFlow.emit(

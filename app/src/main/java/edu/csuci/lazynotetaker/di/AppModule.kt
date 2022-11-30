@@ -44,6 +44,7 @@ object AppModule {
             addNoteUseCase = AddNoteUseCase(repository),
             addPageUseCase = AddPageUseCase(repository),
             getNoteUseCase = GetNoteUseCase(repository),
+            getMaxIdFromPage = getMaxIdFromPage(repository),
             getPagesUseCase = GetPagesUseCase(repository),
             getPageUseCase = GetPageUseCase(repository)
         )

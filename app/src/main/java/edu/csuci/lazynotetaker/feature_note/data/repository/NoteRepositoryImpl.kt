@@ -27,6 +27,9 @@ class NoteRepositoryImpl(
         return dao.getPageById(id)
     }
 
+    override fun getMaxIdFromPage(): Int {
+        return dao.getMaxIdFromPage()
+    }
     override suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int): Page? {
         return dao.getPageByIdAndPageNumber(id, pageNumber)
     }

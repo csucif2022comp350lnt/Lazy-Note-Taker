@@ -19,6 +19,8 @@ interface NoteRepository {
 
     suspend fun insertNote(note: Note)
 
+    fun getMaxIdFromPage() : Int
+
     suspend fun insertPage(page: Page)
 
     suspend fun deleteNote(note: Note)

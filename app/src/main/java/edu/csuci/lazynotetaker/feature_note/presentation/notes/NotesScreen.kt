@@ -38,7 +38,7 @@ fun NotesScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                        navController.navigate(Screen.AddEditNoteScreen.route)
+                    navController.navigate(Screen.AddEditNoteScreen.route)
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -47,7 +47,7 @@ fun NotesScreen(
             }
         },
         scaffoldState = scaffoldState
-    )   { padding->
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,7 +67,7 @@ fun NotesScreen(
 
                 IconButton(
                     onClick = {
-                              viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                        viewModel.onEvent(NotesEvent.ToggleOrderSection)
                     },
                 ) {
                     Icon(
@@ -104,9 +104,9 @@ fun NotesScreen(
                         viewModel.onEvent(NotesEvent.Order(it))
                     }
                 )
-                
+
             }
-            Spacer(modifier =  Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.notes) { note ->
                     NoteItem(
@@ -127,7 +127,7 @@ fun NotesScreen(
                                     message = "Note deleted",
                                     actionLabel = "Undo"
                                 )
-                                if(result == SnackbarResult.ActionPerformed) {
+                                if (result == SnackbarResult.ActionPerformed) {
                                     viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }

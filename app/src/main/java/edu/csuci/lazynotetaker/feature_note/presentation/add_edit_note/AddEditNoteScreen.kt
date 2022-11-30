@@ -280,11 +280,12 @@ fun AddEditNoteScreen(
                 HorizontalPager(
                     count = 10,
                     state = pagerState,
-                ) {
+                ) { it -> pagerState.currentPage
+
                     LaunchedEffect(it){
                         viewModel.onEvent(AddEditNoteEvent.SaveNote)
 
-                        viewModel.onEvent(AddEditNoteEvent.ChangePage(currentPage))
+                        viewModel.onEvent(AddEditNoteEvent.ChangePage(pagerState.currentPage))
 
                     }
                     TransparentHintTextField(
