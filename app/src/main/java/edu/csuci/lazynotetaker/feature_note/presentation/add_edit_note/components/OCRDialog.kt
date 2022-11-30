@@ -13,16 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import edu.csuci.lazynotetaker.feature_note.presentation.MainActivity
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteEvent
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteViewModel
+
 
 @Composable
     fun CompleteDialogContent(
         title: String,
         dialogState: MutableState<Boolean>,
         successButtonText: String,
-        viewModel: AddEditNoteViewModel = hiltViewModel(),
         content: @Composable () -> Unit
     ) {
         Card(
@@ -39,7 +38,7 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNo
             ) {
                 TitleAndButton(title, dialogState)
                 AddBody(content)
-                BottomButtons(successButtonText, dialogState = dialogState, viewModel)
+                BottomButtons(dialogState = dialogState)
             }
         }
     }
@@ -70,7 +69,10 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNo
     }
 
     @Composable
-    private fun BottomButtons(successButtonText: String, dialogState: MutableState<Boolean>, viewModel: AddEditNoteViewModel = hiltViewModel()) {
+    private fun BottomButtons(
+        dialogState: MutableState<Boolean>,
+        viewModel: AddEditNoteViewModel = hiltViewModel()
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(1f)
@@ -81,8 +83,8 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNo
 
             Button(
                 onClick = {
-                    MainActivity.insertText = OCR.text
                     dialogState.value = false
+                    viewModel.onEvent(AddEditNoteEvent.OCRInsert(OCR.text))
                 },
                 modifier = Modifier.width(100.dp),
                 shape = RoundedCornerShape(16.dp)
