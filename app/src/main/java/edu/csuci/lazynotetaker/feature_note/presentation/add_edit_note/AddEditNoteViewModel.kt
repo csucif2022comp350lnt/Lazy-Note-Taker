@@ -148,30 +148,6 @@ class AddEditNoteViewModel @Inject constructor(
 
                     }
                 }
-//                currentPageNumber.value.pageNumber = event.pageNumber
-//                viewModelScope.launch {
-//
-//                    currentNoteId?.let {
-//                        noteUseCases.getPageUseCase(currentNoteId!!, event.pageNumber
-//                        ).also { page ->
-//                            if (page != null) {
-//                                _noteContent.value = noteContent.value.copy(
-//                                    text = page.content,
-//                                    isHintVisible = false
-//                                )
-//                            } else {
-//                                _noteContent.value = noteContent.value.copy(
-//                                    text = "",
-//                                    isHintVisible = true
-//                                )
-//                            }
-//
-//                        }
-//                    }
-//
-//
-//
-//                }
 
             }
             is AddEditNoteEvent.SaveNote -> {
