@@ -79,7 +79,7 @@ fun NotesScreen(
                 }
                 IconButton(
                     onClick = {
-
+                        navController.navigate(Screen.SettingsScreen.route)
                     },
                 ) {
                     Icon(

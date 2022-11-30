@@ -18,10 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.settings.SettingsScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
-import edu.csuci.lazynotetaker.ui.theme.lazynotetakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
+import edu.csuci.lazynotetaker.ui.theme.*
 import java.io.InputStream
 
 @AndroidEntryPoint
@@ -31,31 +32,17 @@ class MainActivity : ComponentActivity() {
         var text: String = "null"
         var imageFile: Uri = "null".toUri()
         var insertText: String = ""
+        var appTheme = AmoledColorPalette
 
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK){
-            Log.i("datareturn", data.toString())
-
-
-            if (isFileChooser) {
-                imageFile = data!!.data!!
-            }
-            Log.i("uritofile", imageFile.toString())
-            val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
-            //TesseractOCR(this, imagefileUri)
-
-        }
-    }*/
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            lazynotetakerTheme {
+            lazynotetakerTheme(appTheme) {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
@@ -63,10 +50,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesStreen.route
+                        startDestination = Screen.NotesScreen.route
                     )   {
-                        composable(route = Screen.NotesStreen.route) {
+                        composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
+                        }
+                        composable(route = Screen.SettingsScreen.route) {
+                            SettingsScreen(navController = navController)
                         }
                         composable(
                             route = Screen.AddEditNoteScreen.route +
