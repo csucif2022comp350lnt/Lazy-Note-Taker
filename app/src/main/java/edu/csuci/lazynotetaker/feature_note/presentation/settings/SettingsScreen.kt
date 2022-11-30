@@ -43,7 +43,6 @@ import edu.csuci.lazynotetaker.feature_note.presentation.notes.components.OrderS
 import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
 import kotlinx.coroutines.launch
 import edu.csuci.lazynotetaker.feature_note.presentation.settings.components.UISection
-import edu.csuci.lazynotetaker.ui.theme.lazynotetakerTheme
 
 
 @Composable

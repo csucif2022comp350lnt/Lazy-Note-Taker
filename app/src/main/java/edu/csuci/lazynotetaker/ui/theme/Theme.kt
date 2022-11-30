@@ -33,12 +33,4 @@ val DarkColorPalette = darkColors(
 
     var curTheme = AmoledColorPalette
 
-    @Composable
-    fun lazynotetakerTheme(curTheme: Colors, content: @Composable() () -> Unit) {
-        MaterialTheme(
-            colors = appTheme,
-            typography = Typography,
-            shapes = Shapes,
-            content = content
-        )
-    }
+

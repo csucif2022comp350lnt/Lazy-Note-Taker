@@ -77,7 +77,7 @@ fun NotesScreen(
                     )
 
                 }
-                IconButton(
+                /*IconButton(
                     onClick = {
                         navController.navigate(Screen.SettingsScreen.route)
                     },
@@ -88,7 +88,7 @@ fun NotesScreen(
                         contentDescription = "Settings Wheel"
                     )
 
-                }
+                }*/
             }
             AnimatedVisibility(
                 visible = state.isOrderSectionVisible,

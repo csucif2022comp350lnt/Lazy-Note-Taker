@@ -40,10 +40,7 @@ fun UISection(
             DefaultRadioButton(
                 text = "Dark",
                 selected = MainActivity.appTheme == DarkColorPalette,
-                onSelect = { onThemeChange
-
-
-                    MainActivity.appTheme = DarkColorPalette }
+                onSelect = { MainActivity.appTheme = DarkColorPalette }
             )
             Spacer(modifier = Modifier.width(0.dp))
             DefaultRadioButton(
