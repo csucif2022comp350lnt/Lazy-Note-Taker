@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
 import androidx.core.net.toUri
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,10 +20,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.AddEditNoteScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.notes.NotesScreen
+import edu.csuci.lazynotetaker.feature_note.presentation.settings.SettingsScreen
 import edu.csuci.lazynotetaker.feature_note.presentation.util.Screen
-import edu.csuci.lazynotetaker.ui.theme.lazynotetakerTheme
 import dagger.hilt.android.AndroidEntryPoint
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR.TesseractOCR
+import edu.csuci.lazynotetaker.ui.theme.*
 import java.io.InputStream
 
 @AndroidEntryPoint
@@ -31,31 +34,17 @@ class MainActivity : ComponentActivity() {
         var text: String = "null"
         var imageFile: Uri = "null".toUri()
         var insertText: String = ""
+        var appTheme = AmoledColorPalette
 
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK){
-            Log.i("datareturn", data.toString())
-
-
-            if (isFileChooser) {
-                imageFile = data!!.data!!
-            }
-            Log.i("uritofile", imageFile.toString())
-            val imagefileUri: InputStream? = contentResolver.openInputStream(imageFile)
-            //TesseractOCR(this, imagefileUri)
-
-        }
-    }*/
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            lazynotetakerTheme {
+            lazynotetakerTheme(appTheme) {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
@@ -63,10 +52,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.NotesStreen.route
+                        startDestination = Screen.NotesScreen.route
                     )   {
-                        composable(route = Screen.NotesStreen.route) {
+                        composable(route = Screen.NotesScreen.route) {
                             NotesScreen(navController = navController)
+                        }
+                        composable(route = Screen.SettingsScreen.route) {
+                            SettingsScreen(navController = navController)
                         }
                         composable(
                             route = Screen.AddEditNoteScreen.route +
@@ -104,4 +96,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+@Composable
+fun lazynotetakerTheme(curTheme: Colors, content: @Composable() () -> Unit) {
+    MaterialTheme(
+        colors = MainActivity.appTheme,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
 }

@@ -3,7 +3,7 @@ package edu.csuci.lazynotetaker.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val DarkGray = Color(0xFF202020)
-val LightGray = Color.LightGray
+val LightGray = Color(0xFF4F4F4F)
 val LightBlue = Color(0xFFD7E8DE)
 val White = Color(0xffffffff)
 val Black = Color(0xff000000)

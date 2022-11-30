@@ -18,7 +18,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import edu.csuci.lazynotetaker.ui.theme.lazynotetakerTheme
 
 @Composable
 fun TransparentHintTextField(
