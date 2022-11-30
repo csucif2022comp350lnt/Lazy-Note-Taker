@@ -28,6 +28,9 @@ interface NoteDao {
     @Query("SELECT * FROM page WHERE id = :id AND pageNumber = :pageNumber")
     suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int) :Page?
 
+    @Query("SELECT MAX(id) FROM page")
+    fun getMaxIdFromPage() :Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
 
@@ -37,8 +40,8 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(note: Note)
 
-    @Delete
-    suspend fun deletePage(page: Page)
+    @Query("DELETE from page WHERE id = :id")
+    suspend fun deletePage(id: Int)
 
     @Transaction
     @Query("SELECT * FROM note WHERE id = :id")

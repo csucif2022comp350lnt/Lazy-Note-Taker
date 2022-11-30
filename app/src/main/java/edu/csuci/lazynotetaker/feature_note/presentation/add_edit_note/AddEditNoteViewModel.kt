@@ -51,7 +51,7 @@ class AddEditNoteViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentNoteId: Int = 1
+    private var currentNoteId: Int? = null
     private val _currentPageNumber = mutableStateOf(
         PageNumberState(
             pageNumber = 0

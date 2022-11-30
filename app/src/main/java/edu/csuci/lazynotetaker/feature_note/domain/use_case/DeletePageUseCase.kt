@@ -4,7 +4,7 @@ import edu.csuci.lazynotetaker.feature_note.domain.model.Page
 import edu.csuci.lazynotetaker.feature_note.domain.repository.NoteRepository
 
 class DeletePageUseCase (private val repository: NoteRepository) {
-    suspend operator fun invoke(page: Page){
-        repository.deletePage(page)
+    suspend operator fun invoke(id: Int){
+        repository.deletePage(id)
     }
 }

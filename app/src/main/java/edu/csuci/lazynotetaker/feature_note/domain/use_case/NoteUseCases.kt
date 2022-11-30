@@ -6,6 +6,7 @@ data class NoteUseCases(
     val deletePageUseCase: DeletePageUseCase,
     val addNoteUseCase: AddNoteUseCase,
     val addPageUseCase: AddPageUseCase,
+    val getMaxIdFromPage: getMaxIdFromPage,
     val getNoteUseCase: GetNoteUseCase,
     val getPagesUseCase: GetPagesUseCase,
     val getPageUseCase: GetPageUseCase

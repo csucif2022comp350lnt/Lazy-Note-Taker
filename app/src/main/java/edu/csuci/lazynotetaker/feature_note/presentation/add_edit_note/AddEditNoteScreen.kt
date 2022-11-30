@@ -50,7 +50,9 @@ import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.component
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.OCR
 import edu.csuci.lazynotetaker.feature_note.presentation.add_edit_note.components.TransparentHintTextField
 import edu.csuci.lazynotetaker.ui.theme.Black
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
@@ -71,7 +73,7 @@ fun AddEditNoteScreen(
     }
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
-    val pageNumber = viewModel.currentPageNumber.value
+    //val pageNumberState = viewModel.currentPageNumber.value
 
     val state = viewModel.state.value
 
@@ -266,32 +268,26 @@ fun AddEditNoteScreen(
 
             )
             Spacer(modifier = Modifier.height(5.dp))
-//            TransparentHintTextField(
-//                text = contentState.text,
-//                hint = contentState.hint,
-//                onValueChange = {
-//                    viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
-//                },
-//                onFocusChange = {
-//                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-//                    state.isColorSectionVisible = false
-//                },
-//                isHintVisible = contentState.isHintVisible,
-//                textStyle = MaterialTheme.typography.body1,
-//                modifier = Modifier.fillMaxHeight()
-//
-//            )
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                //start of page
 
                 val pagerState = rememberPagerState(initialPage = 0)
 
                 HorizontalPager(
                     count = 10,
                     state = pagerState,
-                ) {
+                ) { it -> pagerState.currentPage
+
+                    LaunchedEffect(it){
+                        viewModel.onEvent(AddEditNoteEvent.SaveNote)
+
+                        viewModel.onEvent(AddEditNoteEvent.ChangePage(pagerState.currentPage))
+
+                    }
                     TransparentHintTextField(
                 text = contentState.text,
                 hint = contentState.hint,
@@ -314,11 +310,12 @@ fun AddEditNoteScreen(
 
                         )
                 }
+                //end of page
 
                 PagerIndicator(
                     pagerState = pagerState,
                     indicatorSize = 20.dp,
-                    indicatorCount = 7,
+                    indicatorCount = 6,
                     activeColor = noteBackgroundAnimatable.value,
                     inActiveColor = MaterialTheme.colors.onBackground,
                     indicatorShape = CutCornerShape(10.dp)

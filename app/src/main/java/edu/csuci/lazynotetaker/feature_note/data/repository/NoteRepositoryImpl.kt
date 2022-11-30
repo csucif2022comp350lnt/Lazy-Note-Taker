@@ -27,6 +27,9 @@ class NoteRepositoryImpl(
         return dao.getPageById(id)
     }
 
+    override fun getMaxIdFromPage(): Int {
+        return dao.getMaxIdFromPage()
+    }
     override suspend fun getPageByIdAndPageNumber(id: Int, pageNumber: Int): Page? {
         return dao.getPageByIdAndPageNumber(id, pageNumber)
     }
@@ -39,8 +42,8 @@ class NoteRepositoryImpl(
         dao.deleteNote(note)
     }
 
-    override suspend fun deletePage(page: Page){
-        dao.deletePage(page)
+    override suspend fun deletePage(id: Int){
+        dao.deletePage(id)
     }
 
     override suspend fun insertPage(page: Page) {
